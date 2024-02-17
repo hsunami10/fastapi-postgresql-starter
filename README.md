@@ -2,7 +2,7 @@
 
 ## Setup
 
-1. install packages with `pip install -r requirements.txt` ([source](https://www.freecodecamp.org/news/python-requirementstxt-explained/))
+1. install packages with `pip install -r ./requirements/development.txt` ([source](https://www.freecodecamp.org/news/python-requirementstxt-explained/))
 
 2. Run server with `uvicorn src.main:app --reload`
 
