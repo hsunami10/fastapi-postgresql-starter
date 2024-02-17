@@ -1,6 +1,6 @@
 from typing import Annotated
 from enum import Enum
-from fastapi import APIRouter, Query, Path
+from fastapi import APIRouter, Query, Path, Body
 from pydantic import BaseModel
 
 
@@ -15,13 +15,13 @@ https://fastapi.tiangolo.com/tutorial/path-params/
 # With similar paths, such as /users/me and /users/{user_id},
 # order matters - whatever endpoint is declared first is prioritized.
 # https://fastapi.tiangolo.com/tutorial/path-params/#order-matters
-@router.get("/users/me")
+@router.get("/path_params/similar_paths/me")
 async def read_user_me():
     return {"user_id": "the current user"}
 
 
 # Path parameters with types example
-@router.get("/users/{user_id}")
+@router.get("/path_params/similar_paths/{user_id}")
 async def read_user(user_id: str) -> dict[str, str]:
     return {"user_id": user_id}
 
@@ -36,7 +36,7 @@ class CompanyName(str, Enum):
     google = "google"
 
 
-@router.get("/company/{company_name}")
+@router.get("/path_params/enums/{company_name}")
 async def get_model(company_name: CompanyName):
     if company_name is CompanyName.apple:
         return {"model_name": company_name, "message": "apple vision pro?"}
@@ -49,11 +49,9 @@ async def get_model(company_name: CompanyName):
 
 # Path params that are paths themselves
 # https://fastapi.tiangolo.com/tutorial/path-params/#path-parameters-containing-paths
-@router.get("/files/{file_path:path}")
+@router.get("/path_params/files/{file_path:path}")
 async def read_file(file_path: str):
     return {"file_path": file_path}
-
-
 
 
 """
@@ -64,14 +62,14 @@ Don't include them in routing string
 
 
 # Query params with default values
-@router.get("/items/default_values/")
+@router.get("/query_params/default_values/")
 async def read_item(offset: int = 0, limit: int = 10):
     items = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"}]
     return items[offset : offset + limit]
 
 
 # Optional query params
-@router.get("/items/optional/{item_id}")
+@router.get("/query_params/optional_values/{item_id}")
 async def read_item_short(item_id: str, q: str | None = None, short: bool = False):
     item = {"item_id": item_id}
     if q:
@@ -82,15 +80,15 @@ async def read_item_short(item_id: str, q: str | None = None, short: bool = Fals
 
 
 # Required query params
-@router.get("/items/required/{item_id}")
-async def read_user_item(item_id: str, required_q_param: str):
-    item = {"item_id": item_id, "required_q_param": required_q_param}
+@router.get("/query_params/required/")
+async def read_user_item(required_q_param: str):
+    item = {"item_id": 10, "required_q_param": required_q_param}
     return item
 
 
 # Ellipses (...) are used to declare that a value is required
 # https://fastapi.tiangolo.com/tutorial/query-params-str-validations/#required-with-ellipsis
-@router.get("/items/ellipse/")
+@router.get("/query_params/ellipses/")
 async def read_items(q: Annotated[str, Query(min_length=3)] = ...):
     results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
     if q:
@@ -99,7 +97,7 @@ async def read_items(q: Annotated[str, Query(min_length=3)] = ...):
 
 
 # Allow multiple query params
-@router.get("/items/multiple_q_params/")
+@router.get("/query_params/multiple_params/")
 async def read_items(q: Annotated[list[str], Query()] = ["foo", "bar"]):
     query_items = {"q": q}
     return query_items
@@ -109,7 +107,7 @@ async def read_items(q: Annotated[list[str], Query()] = ["foo", "bar"]):
 Additional validations and metadata for Query and Path functions
 
 Generic validations and metadata
-    • alias (str) - an alias for the query parameter
+    • alias (str) - an alias for the query parameter (not path)
     • title (str) - title metadata for OpenAPI docs
     • description (str) - description metadata for OpenAPI docs
     • deprecated (bool) - show if deprecated or not (for OpenAPI docs)
@@ -128,12 +126,11 @@ Integer validations
 """
 
 
-@router.get("/items/metadata_and_more_validations/{item-id}")
-async def read_items(
+@router.get("/metadata_and_more_validations/{item_id}")
+async def read_item(
     item_id: Annotated[
         int,
         Path(
-            alias="item-id",
             title="Path int param",
             description="Path param to search with item id",
             ge=1
@@ -172,10 +169,15 @@ class Item(BaseModel):
     tax: float | None = None
 
 
+class User(BaseModel):
+    username: str
+    full_name: str | None = None
+
+
 fake_items_db: list[dict] = []
 
 
-@router.post("/items/")
+@router.post("/request_body/single")
 async def create_item(item: Item):
     item_dict = item.dict()
     if item.tax:
@@ -186,7 +188,23 @@ async def create_item(item: Item):
     return item_dict
 
 
-@router.put("/items/{item_id}")
+@router.put("/request_body/multiple/{item_id}")
+async def update_item(item_id: int, item: Item, user: User):
+    results = {"item_id": item_id, "item": item, "user": user}
+    return results
+
+
+@router.put("/request_body/spread/{item_id}")
 async def update_item(item_id: int, item: Item):
     # ** is like a spread operator in JavaScript
     return {"item_id": item_id, **item.dict()}
+
+
+# Using singular values (not dicts) in request body
+@router.put("/request_body/scalar_value/{item_id}")
+async def update_item(
+    item_id: int, item: Item, importance: Annotated[int, Body()]
+):
+    results = {"item_id": item_id, "item": item, "importance": importance}
+    return results
+
