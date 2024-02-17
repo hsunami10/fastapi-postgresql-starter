@@ -1,14 +1,14 @@
 from typing import Annotated
 from enum import Enum
 from fastapi import APIRouter, Query, Path, Body
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, HttpUrl
 
 
 router = APIRouter()
 
 
 """
-Additional validations and metadata for Query, Path, Body functions
+Additional validations and metadata for Query, Path, Body, Field functions
 
 Generic validations and metadata
     • alias (str) - an alias for the parameter / body
@@ -158,16 +158,30 @@ async def read_item(
 
 
 """
-Request Body (Pydantic)
+Request Body (Pydantic Models)
 https://fastapi.tiangolo.com/tutorial/body/
 """
 
 
+class Image(BaseModel):
+    url: HttpUrl
+    name: str
+
+
 class Item(BaseModel):
+    name: str
+    description: str | None = Field(default=None, title="Item Description", max_length=300)
+    price: float = Field(gt=0, description="The price of an item, must be greater than zero.")
+    tax: float | None = None
+    tags: set[str] = set()
+    images: list[Image] | None = None
+
+
+class SalesPost(BaseModel):
     name: str
     description: str | None = None
     price: float
-    tax: float | None = None
+    items: list[Item]
 
 
 class User(BaseModel):
@@ -189,10 +203,15 @@ async def create_item(item: Item):
     return item_dict
 
 
-@router.put("/request_body/multiple/{item_id}")
+@router.put("/request_body/multiple_keys/{item_id}")
 async def update_item(item_id: int, item: Item, user: User):
     results = {"item_id": item_id, "item": item, "user": user}
     return results
+
+
+@router.post("/request_body/list/")
+async def create_multiple_images(images: list[Image]):
+    return images
 
 
 @router.put("/request_body/spread/{item_id}")
@@ -210,10 +229,16 @@ async def update_item(
     return results
 
 
-@router.put("/request_body/embed{item_id}")
+# Instead of {name: ..., description: ...}, embed would make it
+# {item: {name: ..., description: ...}}
+@router.put("/request_body/embed/{item_id}")
 async def update_item(item_id: int, item: Annotated[Item, Body(embed=True)]):
     results = {"item_id": item_id, "item": item}
     return results
 
 
-# TODO: Continue tutorial here - https://fastapi.tiangolo.com/tutorial/body-fields/
+# Allow JSON with any key-value pairs
+@router.post("/request_body/arbitrary_dicts/")
+async def create_index_weights(weights: dict[int, float]):
+    return weights
+
