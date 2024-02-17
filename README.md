@@ -4,15 +4,21 @@
 
 1. install packages with `pip install -r requirements.txt` ([source](https://www.freecodecamp.org/news/python-requirementstxt-explained/))
 
+2. Run server with `uvicorn src.main:app --reload`
+
 ### PyCharm
 
 1. Install PyCharm Community Edition (free) from [here](https://www.jetbrains.com/pycharm/download/?section=mac).
 2. Run `pip install -r requirements.txt`
 
-| Keyboard Shortcut | Function           |
+#### Keyboard Shortcuts
+
+| Key Combo         | Function           |
 | ----------------- | ------------------ |
 | `Shift` + `Shift` | open search menu   |
 | `Ctrl/Cmd` + `,`  | open settings menu |
+#### Plugins
+- [Pydantic PyCharm Plugin](https://github.com/koxudaxi/pydantic-pycharm-plugin/)
 
 ## Troubleshooting
 
