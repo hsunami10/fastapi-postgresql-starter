@@ -6,6 +6,30 @@ from pydantic import BaseModel
 
 router = APIRouter()
 
+
+"""
+Additional validations and metadata for Query, Path, Body functions
+
+Generic validations and metadata
+    • alias (str) - an alias for the parameter / body
+    • title (str) - title metadata for OpenAPI docs
+    • description (str) - description metadata for OpenAPI docs
+    • deprecated (bool) - show if deprecated or not (for OpenAPI docs)
+    • include_in_schema (bool) - show/hide in OpenAPI docs
+
+String validations
+    • min_length (int) - minimum length of string
+    • max_length (int) - maximum length of string
+    • pattern (str) - validates if there's a regex pattern match
+
+Integer validations
+    • ge (>=) - greater than or equal to
+    • le (<=) - less than or equal to
+    • gt (>) - greater than
+    • lt (<) - less than
+"""
+
+
 """
 Path Parameters Tutorial
 https://fastapi.tiangolo.com/tutorial/path-params/
@@ -103,29 +127,6 @@ async def read_items(q: Annotated[list[str], Query()] = ["foo", "bar"]):
     return query_items
 
 
-"""
-Additional validations and metadata for Query and Path functions
-
-Generic validations and metadata
-    • alias (str) - an alias for the query parameter (not path)
-    • title (str) - title metadata for OpenAPI docs
-    • description (str) - description metadata for OpenAPI docs
-    • deprecated (bool) - show if deprecated or not (for OpenAPI docs)
-    • include_in_schema (bool) - show/hide query param in OpenAPI docs
-
-String validations
-    • min_length (int) - minimum length of string
-    • max_length (int) - maximum length of string
-    • pattern (str) - validates if there's a regex pattern match
-    
-Integer validations
-    • ge (>=) - greater than or equal to
-    • le (<=) - less than or equal to
-    • gt (>) - greater than
-    • lt (<) - less than
-"""
-
-
 @router.get("/metadata_and_more_validations/{item_id}")
 async def read_item(
     item_id: Annotated[
@@ -203,8 +204,16 @@ async def update_item(item_id: int, item: Item):
 # Using singular values (not dicts) in request body
 @router.put("/request_body/scalar_value/{item_id}")
 async def update_item(
-    item_id: int, item: Item, importance: Annotated[int, Body()]
+    item_id: int, item: Item, importance: Annotated[int, Body(gt=0)]
 ):
     results = {"item_id": item_id, "item": item, "importance": importance}
     return results
 
+
+@router.put("/request_body/embed{item_id}")
+async def update_item(item_id: int, item: Annotated[Item, Body(embed=True)]):
+    results = {"item_id": item_id, "item": item}
+    return results
+
+
+# TODO: Continue tutorial here - https://fastapi.tiangolo.com/tutorial/body-fields/
