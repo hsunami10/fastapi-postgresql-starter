@@ -22,28 +22,28 @@ Pydantic functions (not comprehensive):
 - Field()
 
 Metadata for OpenAPI docs
-    • title (str)
-    • description (str)
-    • deprecated (bool) - show if deprecated or not
-    • include_in_schema (bool) - show/hide in OpenAPI docs
-    • examples (list[var_type]) - a list of examples (use examples over example)
+• title (str)
+• description (str)
+• deprecated (bool) - show if deprecated or not
+• include_in_schema (bool) - show/hide in OpenAPI docs
+• examples (list[var_type]) - a list of examples (use examples over example)
 
 General validations
-    • default (var_type) - the default value if None is provided (only use for Pydantic)
-        • for FastAPI functions, use var_name Annotated[...] = default_value
-        • https://fastapi.tiangolo.com/tutorial/query-params-str-validations/#alternative-old-query-as-the-default-value
+• default (var_type) - the default value if None is provided (only use for Pydantic)
+• for FastAPI functions, use var_name Annotated[...] = default_value
+• https://fastapi.tiangolo.com/tutorial/query-params-str-validations/#alternative-old-query-as-the-default-value
 
 String validations
-    • alias (str) - an alias for the parameter / body
-    • min_length (int) - minimum length of string
-    • max_length (int) - maximum length of string
-    • pattern (str) - validates if there's a regex pattern match
+• alias (str) - an alias for the parameter / body
+• min_length (int) - minimum length of string
+• max_length (int) - maximum length of string
+• pattern (str) - validates if there's a regex pattern match
 
 Integer validations
-    • ge (>=) - greater than or equal to
-    • le (<=) - less than or equal to
-    • gt (>) - greater than
-    • lt (<) - less than
+• ge (>=) - greater than or equal to
+• le (<=) - less than or equal to
+• gt (>) - greater than
+• lt (<) - less than
 """
 
 
