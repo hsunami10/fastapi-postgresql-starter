@@ -39,7 +39,7 @@ class User(BaseModel):
 fake_items_db: list[dict] = []
 
 
-@router.post("/request_body/single")
+@router.post("/single")
 async def create_item(item: Item):
     item_dict = item.dict()
     if item.tax:
@@ -50,25 +50,25 @@ async def create_item(item: Item):
     return item_dict
 
 
-@router.put("/request_body/multiple_keys/{item_id}")
+@router.put("/multiple_keys/{item_id}")
 async def update_item(item_id: int, item: Item, user: User):
     results = {"item_id": item_id, "item": item, "user": user}
     return results
 
 
-@router.post("/request_body/list/")
+@router.post("/list/")
 async def create_multiple_images(images: list[Image]):
     return images
 
 
-@router.put("/request_body/spread/{item_id}")
+@router.put("/spread/{item_id}")
 async def update_item(item_id: int, item: Item):
     # ** is like a spread operator in JavaScript
     return {"item_id": item_id, **item.dict()}
 
 
 # Using singular values (not dicts) in request body
-@router.put("/request_body/scalar_value/{item_id}")
+@router.put("/scalar_value/{item_id}")
 async def update_item(
     item_id: int, item: Item, importance: Annotated[int, Body(gt=0)]
 ):
@@ -78,13 +78,13 @@ async def update_item(
 
 # Instead of {name: ..., description: ...}, embed would make it
 # {item: {name: ..., description: ...}}
-@router.put("/request_body/embed/{item_id}")
+@router.put("/embed/{item_id}")
 async def update_item(item_id: int, item: Annotated[Item, Body(embed=True)]):
     results = {"item_id": item_id, "item": item}
     return results
 
 
 # Allow JSON with any key-value pairs
-@router.post("/request_body/arbitrary_dicts/")
+@router.post("/arbitrary_dicts/")
 async def create_index_weights(weights: dict[int, float]):
     return weights
