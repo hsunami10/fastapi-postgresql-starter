@@ -103,7 +103,7 @@ async def read_item(
 # Examples in the JSON schema
 @router.post("/extra_json_schema_data")
 async def create_item(item: MetaItem):
-    return item.dict()
+    return item.model_dump()
 
 
 # Examples in the path operation

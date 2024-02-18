@@ -41,7 +41,7 @@ fake_items_db: list[dict] = []
 
 @router.post("/single")
 async def create_item(item: Item):
-    item_dict = item.dict()
+    item_dict = item.model_dump()
     if item.tax:
         price_with_tax = item.price + item.tax
         item_dict.update({"price_with_tax": price_with_tax})
@@ -64,7 +64,7 @@ async def create_multiple_images(images: list[Image]):
 @router.put("/spread/{item_id}")
 async def update_item(item_id: int, item: Item):
     # ** is like a spread operator in JavaScript
-    return {"item_id": item_id, **item.dict()}
+    return {"item_id": item_id, **item.model_dump()}
 
 
 # Using singular values (not dicts) in request body

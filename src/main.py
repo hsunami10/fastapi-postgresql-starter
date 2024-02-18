@@ -5,7 +5,9 @@ from src.tutorial import (
     path_params_router,
     query_params_router,
     request_body_router,
-    validations_router
+    validations_router,
+    cookie_header_router,
+    response_pydantic_router
 )
 
 app = FastAPI()
@@ -29,3 +31,5 @@ app.include_router(path_params_router)
 app.include_router(query_params_router)
 app.include_router(request_body_router)
 app.include_router(validations_router)
+app.include_router(cookie_header_router)
+app.include_router(response_pydantic_router)

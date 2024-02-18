@@ -2,9 +2,21 @@
 
 ## Setup
 
-1. install packages with `pip install -r ./requirements/development.txt` ([source](https://www.freecodecamp.org/news/python-requirementstxt-explained/))
+1. navigate to project's root directory
 
-2. Run server with `uvicorn src.main:app --reload`
+2. create a python virtual environment - `python3 -m venv ./.venv`
+
+3. activate the virtualenv - `source .venv/bin/activate` 
+   - you should see `(.venv)` to the left of input)
+   - running `pip -V` → should print out a path including your project directory
+
+4. install packages with `pip install -r ./requirements/development.txt` ([source](https://www.freecodecamp.org/news/python-requirementstxt-explained/))
+
+5. Run server with `uvicorn src.main:app --reload`
+
+
+
+Note: to exit out of the `venv`, type `deactivate`.
 
 ### PyCharm
 
