@@ -2,9 +2,10 @@
 Query Parameters Tutorial
 https://fastapi.tiangolo.com/tutorial/query-params/
 """
-from typing import Annotated
-from fastapi import APIRouter, Query, Path
 
+from typing import Annotated
+
+from fastapi import APIRouter, Path, Query
 
 router = APIRouter(prefix="/query_params", tags=["Query Parameters"])
 

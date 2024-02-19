@@ -2,6 +2,7 @@
 HTTP Response Status Codes
 https://fastapi.tiangolo.com/tutorial/response-status-code/
 """
+
 from fastapi import APIRouter, status
 
 router = APIRouter(prefix="/response_status_codes", tags=["HTTP Response Status Codes"])

@@ -2,10 +2,11 @@
 Request Body (Pydantic Models)
 https://fastapi.tiangolo.com/tutorial/body/
 """
+
 from typing import Annotated
+
 from fastapi import APIRouter, Body
 from pydantic import BaseModel, Field, HttpUrl
-
 
 router = APIRouter(prefix="/request_body", tags=["Request Body"])
 
@@ -17,8 +18,12 @@ class Image(BaseModel):
 
 class Item(BaseModel):
     name: str
-    description: str | None = Field(default=None, title="Item Description", max_length=300)
-    price: float = Field(gt=0, description="The price of an item, must be greater than zero.")
+    description: str | None = Field(
+        default=None, title="Item Description", max_length=300
+    )
+    price: float = Field(
+        gt=0, description="The price of an item, must be greater than zero."
+    )
     tax: float | None = None
     tags: set[str] = set()
     images: list[Image] | None = None
@@ -69,9 +74,7 @@ async def update_item(item_id: int, item: Item):
 
 # Using singular values (not dicts) in request body
 @router.put("/scalar_value/{item_id}")
-async def update_item(
-    item_id: int, item: Item, importance: Annotated[int, Body(gt=0)]
-):
+async def update_item(item_id: int, item: Item, importance: Annotated[int, Body(gt=0)]):
     results = {"item_id": item_id, "item": item, "importance": importance}
     return results
 

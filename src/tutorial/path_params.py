@@ -2,9 +2,10 @@
 Path Parameters Tutorial
 https://fastapi.tiangolo.com/tutorial/path-params/
 """
-from enum import Enum
-from fastapi import APIRouter
 
+from enum import Enum
+
+from fastapi import APIRouter
 
 router = APIRouter(prefix="/path_params", tags=["Path Parameters"])
 
@@ -26,6 +27,7 @@ async def read_user(user_id: str) -> dict[str, str]:
 # Predefined path param values
 # https://fastapi.tiangolo.com/tutorial/path-params/#predefined-values
 
+
 # Enum definition
 class CompanyName(str, Enum):
     apple = "apple"
@@ -41,7 +43,7 @@ async def get_model(company_name: CompanyName):
     if company_name.value == CompanyName.microsoft.value:
         return {"model_name": company_name, "message": "hi this is microsoft"}
 
-    return {"model_name": company_name, "message": "\"hey google\""}
+    return {"model_name": company_name, "message": '"hey google"'}
 
 
 # Path params that are paths themselves

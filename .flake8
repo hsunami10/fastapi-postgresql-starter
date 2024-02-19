@@ -1,0 +1,4 @@
+[flake8]
+# Black Formatter's default value
+max-line-length = 88
+exclude = .git,__pycache__,__init__.py,.mypy_cache,.pytest_cache,alembic/*,temp_*

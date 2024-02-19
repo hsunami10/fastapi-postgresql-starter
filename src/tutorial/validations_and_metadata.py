@@ -1,9 +1,11 @@
 from typing import Annotated
-from fastapi import APIRouter, Query, Path, Body
+
+from fastapi import APIRouter, Body, Path, Query
 from pydantic import BaseModel, Field, HttpUrl
 
-
-router = APIRouter(prefix="/validations_and_metadata", tags=["Additional Validations and Metadata"])
+router = APIRouter(
+    prefix="/validations_and_metadata", tags=["Additional Validations and Metadata"]
+)
 
 
 """
@@ -77,8 +79,8 @@ async def read_item(
         Path(
             title="Path int param",
             description="Path param to search with item id",
-            ge=1
-        )
+            ge=1,
+        ),
     ],
     q: Annotated[
         str | None,
@@ -90,7 +92,7 @@ async def read_item(
             max_length=50,
             pattern="fixedquery",
             deprecated=True,
-            include_in_schema=True
+            include_in_schema=True,
         ),
     ] = None,
 ):

@@ -2,50 +2,46 @@
 
 ## Setup
 
-1. navigate to project's root directory
+### Poetry
 
-2. create a python virtual environment - `python3 -m venv ./.venv`
+1. run `curl -sSL https://install.python-poetry.org | python3 -`
+   - if you get an `SSL_CERTIFICATE_VERIFY_FAILED` error, go to Applications → Python Folder → run `Install Certificates.command`
+2. once installation is finished, run `poetry--version` to see if it's installed correctly. If not, replace the path below with your own (it should be printed out in console)
 
-3. activate the virtualenv - `source .venv/bin/activate` 
-   - you should see `(.venv)` to the left of input)
-   - running `pip -V` → should print out a path including your project directory
+```shell
+# Setting PATH for Poetry 1.7.1
+export PATH="/Users/michaelhsu/.local/bin:$PATH"
+```
 
-4. install packages with `pip install -r ./requirements/development.txt` ([source](https://www.freecodecamp.org/news/python-requirementstxt-explained/))
+3. run `poetry --version` again!
 
-5. Run server with `uvicorn src.main:app --reload`
+Run server with `uvicorn src.main:app --reload`
 
+### VSCode Extensions
 
-
-Note: to exit out of the `venv`, type `deactivate`.
-
-### PyCharm
-
-1. Install PyCharm Community Edition (free) from [here](https://www.jetbrains.com/pycharm/download/?section=mac).
-2. Run `pip install -r requirements.txt`
-
-#### Keyboard Shortcuts
-
-| Key Combo         | Function           |
-| ----------------- | ------------------ |
-| `Shift` + `Shift` | open search menu   |
-| `Ctrl/Cmd` + `,`  | open settings menu |
-#### Plugins
-- [Pydantic PyCharm Plugin](https://github.com/koxudaxi/pydantic-pycharm-plugin/)
-
-## Troubleshooting
-
-**Package requirements '...' are not satisfied**
-
-Try to invalidate caches:
-
-1. In the upper menu bar (next to "Edit"), click **File** → **Invalidate Caches**
-2. Click **Invalidate and Restart**.
-
-[Source](https://stackoverflow.com/a/55341896/9477827)
+- [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python) → should automatically install [Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance), [Python Debugger](https://marketplace.visualstudio.com/items?itemName=ms-python.debugpy)
+- [Black Formatter](https://marketplace.visualstudio.com/items?itemName=ms-python.black-formatter) (format Python files)
+- [Flake8](https://marketplace.visualstudio.com/items?itemName=ms-python.flake8) (linting)
+- [Mypy Type Checker](https://marketplace.visualstudio.com/items?itemName=ms-python.mypy-type-checker) (type checking)
+- [isort](https://marketplace.visualstudio.com/items?itemName=ms-python.isort) (import sorting)
 
 ## Resources
 
+### Project Templates
 - https://github.com/zhanymkanov/fastapi_production_template
 - https://medium.com/@tclaitken/setting-up-a-fastapi-app-with-async-sqlalchemy-2-0-pydantic-v2-e6c540be4308
 - https://praciano.com.br/fastapi-and-async-sqlalchemy-20-with-pytest-done-right.html
 
+### Poetry
+
+- https://www.pythoncheatsheet.org/blog/python-projects-with-poetry-and-vscode-part-1
+
+| Command                                    | Description                                            |
+| ------------------------------------------ | ------------------------------------------------------ |
+| `poetry new [package-name]`                | Start a new Python Project.                            |
+| `poetry init`                              | Create a *pyproject.toml* file interactively.          |
+| `poetry install`                           | Install the packages inside the *pyproject.toml* file. |
+| `poetry add [package-name]`                | Add a package to a Virtual Environment.                |
+| `poetry add --group dev [package-name]`    | Add a dev package to a Virtual Environment.            |
+| `poetry remove [package-name]`             | Remove a package from a Virtual Environment.           |
+| `poetry remove --group dev [package-name]` | Remove a dev package from a Virtual Environment.       |

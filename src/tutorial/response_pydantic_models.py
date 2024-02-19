@@ -3,11 +3,15 @@ HTTP Responses with Pydantic Models
 https://fastapi.tiangolo.com/tutorial/response-model/
 https://fastapi.tiangolo.com/tutorial/extra-models/
 """
+
 from typing import Union
+
 from fastapi import APIRouter
 from pydantic import BaseModel, EmailStr
 
-router = APIRouter(prefix="/response_pydantic_models", tags=["HTTP Responses with Pydantic Models"])
+router = APIRouter(
+    prefix="/response_pydantic_models", tags=["HTTP Responses with Pydantic Models"]
+)
 
 
 class ResponseItem(BaseModel):
@@ -35,7 +39,7 @@ async def read_items() -> list[ResponseItem]:
 # Level 1 - returning a dict with "any" return type
 # response_model - automatically converts the returned value to a Pydantic model
 @router.get("/any_with_response_model/", response_model=list[ResponseItem])
-async def read_items() -> any:
+async def read_items() -> list[dict[str, float | str]]:
     return [
         {"name": "Portal Gun", "price": 42.0},
         {"name": "Plumbus", "price": 32.0},
@@ -45,7 +49,7 @@ async def read_items() -> any:
 # Another example of response_model, with 2 Pydantic models
 class UserIn(BaseModel):
     username: str
-    password: str # do NOT do this in production!
+    password: str  # do NOT do this in production!
     email: EmailStr
     full_name: str | None = None
 
@@ -84,6 +88,7 @@ async def create_user(user: UserIn) -> BaseUser:
 
 # Level 4: input, output, and database models
 
+
 class UserBase(BaseModel):
     username: str
     email: EmailStr
@@ -120,6 +125,7 @@ async def create_user(user_in: UserIn):
 
 
 # Response is the union of types
+
 
 class BaseItem(BaseModel):
     description: str

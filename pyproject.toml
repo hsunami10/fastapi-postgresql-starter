@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "src"
+version = "0.1.0"
+description = ""
+authors = ["Michael Hsu <michael100.hsu@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.109.2"
+uvicorn = {extras = ["standard"], version = "^0.27.1"}
+email-validator = "^2.1.0.post1"
+alembic = "^1.13.1"
+pydantic = "^2.6.1"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.1"
+flake8 = "^7.0.0"
+mypy = "^1.8.0"
+black = "^24.2.0"
+ruff = "^0.2.2"
+isort = "^5.13.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

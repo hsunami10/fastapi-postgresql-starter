@@ -1,7 +1,10 @@
 from typing import Annotated
-from fastapi import Cookie, Header, APIRouter
 
-router = APIRouter(prefix="/cookie_header_params", tags=["Cookie and Header Parameters"])
+from fastapi import APIRouter, Cookie, Header
+
+router = APIRouter(
+    prefix="/cookie_header_params", tags=["Cookie and Header Parameters"]
+)
 
 
 @router.get("/items/")

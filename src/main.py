@@ -1,14 +1,13 @@
 from fastapi import FastAPI
-# from src.tutorial.router import router as tutorial_router
 
 from src.tutorial import (
+    cookie_header_router,
     path_params_router,
     query_params_router,
     request_body_router,
-    validations_router,
-    cookie_header_router,
     response_pydantic_router,
     status_codes_router,
+    validations_router,
 )
 
 app = FastAPI()
@@ -27,6 +26,7 @@ async def healthcheck() -> dict[str, str]:
 @app.get("/ping")
 async def ping() -> dict[str, bool]:
     return {"pong": True}
+
 
 app.include_router(path_params_router)
 app.include_router(query_params_router)
