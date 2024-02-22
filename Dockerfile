@@ -1,7 +1,9 @@
+# If changes made, run: docker compose up -d --build
+
 FROM python:3.12-slim
 
 # development, test, staging, production
-ARG APP_ENV
+ARG INSTALL_DEV_DEPS
 
 # Install required packages and clean up disc space
 RUN apt-get update && \
@@ -11,8 +13,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 
-ENV APP_ENV=${APP_ENV} \
-    APP_DIR="/opt/app/" \
+ENV APP_DIR="/opt/app/" \
     # Poetry Configuration
     POETRY_VERSION=1.7.1 \
     POETRY_HOME="/opt/poetry" \
@@ -30,7 +31,7 @@ WORKDIR $APP_DIR
 
 # Copy poetry.lock* in case it doesn't exist in the repo
 COPY ./pyproject.toml ./poetry.lock* $APP_DIR
-RUN poetry install $(test "$APP_ENV" == 'production' && echo "--only main") --no-root --no-interaction --no-ansi
+RUN poetry install $(test "$INSTALL_DEV_DEPS" == 'production' && echo "--only main") --no-root --no-interaction --no-ansi
 
 COPY ./ $APP_DIR
 

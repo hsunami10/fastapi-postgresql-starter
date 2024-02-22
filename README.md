@@ -2,20 +2,8 @@
 
 ## Setup
 
-### Poetry
-
-1. run `curl -sSL https://install.python-poetry.org | python3 -`
-   - if you get an `SSL_CERTIFICATE_VERIFY_FAILED` error, go to Applications → Python Folder → run `Install Certificates.command`
-2. once installation is finished, run `poetry --version` to see if it's installed correctly. If not, replace the path below with your own (it should be printed out in console)
-
-```shell
-# Setting PATH for Poetry 1.7.1
-export PATH="/Users/michaelhsu/.local/bin:$PATH"
-```
-
-3. run `poetry --version` again!
-
-Run server with `uvicorn src.main:app --reload`
+1. `cp .env.template .env` (do not alter contents of .env.template)
+2. `docker compose up -d --build` (1st run only, or on Dockerfile changes)
 
 ### VSCode Extensions
 
@@ -28,7 +16,7 @@ Run server with `uvicorn src.main:app --reload`
 ## Docker
 
 ```sh
-docker build -t hsunami10/fastapi-postgresql-starter . --build-arg APP_ENV=development
+docker build -t hsunami10/fastapi-postgresql-starter . --build-arg INSTALL_DEV_DEPS=development
 
 docker run -d -p 3000:8000 hsunami10/fastapi-postgresql-starter
 ```
