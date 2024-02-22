@@ -5,6 +5,15 @@
 1. `cp .env.template .env` (do not alter contents of .env.template)
 2. `docker compose up -d --build` (1st run only, or on Dockerfile changes)
 
+### [TablePlus](https://tableplus.com/)
+
+Connection Fields:
+
+- Host/Socket: `127.0.0.1` (default, leave blank)
+- Port: `5555` 
+- Password: `changethis`
+- Database: `app`
+
 ### VSCode Extensions
 
 - [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python) → should automatically install [Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance), [Python Debugger](https://marketplace.visualstudio.com/items?itemName=ms-python.debugpy)
