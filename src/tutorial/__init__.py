@@ -1,4 +1,5 @@
 from .cookie_header_params import router as cookie_header_router
+from .dependencies import router as dependencies_router
 from .error_handling import router as error_handling_router
 from .path_params import router as path_params_router
 from .query_params import router as query_params_router

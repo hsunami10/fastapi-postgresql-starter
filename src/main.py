@@ -9,6 +9,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from src.tutorial import (
     cookie_header_router,
+    dependencies_router,
     error_handling_router,
     path_params_router,
     query_params_router,
@@ -44,6 +45,7 @@ app.include_router(cookie_header_router)
 app.include_router(response_pydantic_router)
 app.include_router(status_codes_router)
 app.include_router(error_handling_router)
+app.include_router(dependencies_router)
 
 
 """
