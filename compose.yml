@@ -9,13 +9,16 @@ services:
       dockerfile: Dockerfile
       args:
         - INSTALL_DEV_DEPS=${INSTALL_DEV_DEPS-true}
+    restart: always
     ports:
       - 8080:8000
     depends_on:
-      - database
+      - db
     volumes:
       - ./:/opt/app/
-  database:
+    networks:
+      - backnet
+  db:
     image: postgres:16
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
@@ -24,11 +27,13 @@ services:
     ports:
       - 5555:5432
     volumes:
-      - app-db-data:/var/lib/postgresql/data/pgdata
+      - db-data:/var/lib/postgresql/data/pgdata
+    networks:
+      - backnet
 
 volumes:
-  app-db-data:
+  db-data:
 
 networks:
-  default:
-    name: app_network
+  # frontnet:
+  backnet:

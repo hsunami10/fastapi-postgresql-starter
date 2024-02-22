@@ -52,8 +52,24 @@ docker run -d -p 3000:8000 hsunami10/fastapi-postgresql-starter
 | `poetry remove --group dev [package-name]` | Remove a dev package from a Virtual Environment.       |
 
 ### Docker
+
+#### Sample Apps
+
+- https://docs.docker.com/compose/samples-for-compose/
+- https://github.com/zhanymkanov/fastapi_production_template
+- https://github.com/tiangolo/full-stack-fastapi-postgresql
+
+#### Poetry with Docker
+
 - https://github.com/orgs/python-poetry/discussions/1879
 - https://stackoverflow.com/questions/53835198/integrating-python-poetry-with-docker
 - https://github.com/svx/poetry-fastapi-docker/blob/main/Dockerfile
-- https://github.com/tiangolo/full-stack-fastapi-postgresql/blob/fe95750e3a3db6418383e7c39c5c3f7a5306773c/src/backend/backend.dockerfile
-- https://github.com/zhanymkanov/fastapi_production_template/blob/main/Dockerfile
+
+## TODOs
+
+- split `compose.yml` file into `compose.yml` and `compose.override.yml` + clean up
+  - [working with multiple compose files](https://docs.docker.com/compose/multiple-compose-files/)
+  - [compose in prod](https://docs.docker.com/compose/production/)
+
+- [properly use env vars](https://docs.docker.com/compose/environment-variables/) in `compose.*.yml` files
+- [handle using secrets](https://docs.docker.com/compose/use-secrets/)
