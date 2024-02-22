@@ -68,6 +68,12 @@ docker run -d -p 3000:8000 hsunami10/fastapi-postgresql-starter
 
 ## TODOs
 
+### FastAPI
+
+- [dependencies tutorial](https://fastapi.tiangolo.com/tutorial/dependencies/)
+
+### Docker
+
 - split `compose.yml` file into `compose.yml` and `compose.override.yml` + clean up
   - [working with multiple compose files](https://docs.docker.com/compose/multiple-compose-files/)
   - [compose in prod](https://docs.docker.com/compose/production/)
