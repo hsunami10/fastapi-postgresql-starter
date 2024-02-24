@@ -12,6 +12,8 @@ uvicorn = {extras = ["standard"], version = "^0.27.1"}
 email-validator = "^2.1.0.post1"
 alembic = "^1.13.1"
 pydantic = "^2.6.1"
+python-multipart = "^0.0.9"
+pydantic-settings = "^2.2.1"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -21,6 +23,7 @@ mypy = "^1.8.0"
 black = "^24.2.0"
 ruff = "^0.2.2"
 isort = "^5.13.2"
+sqlalchemy-stubs = "^0.4"
 
 [build-system]
 requires = ["poetry-core>=1.7.1"]

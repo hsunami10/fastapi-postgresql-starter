@@ -36,30 +36,30 @@ CommonQueryDep = Annotated[CommonQueryParams, Depends(CommonQueryParams)]
 
 
 @router.get("/users/")
-async def read_users(commons: CommonQueryDep):
+async def read_users(commons: CommonQueryDep) -> CommonQueryDep:
     return commons
 
 
 @router.get("/items/")
-async def read_items(commons: CommonQueryDep):
+async def read_items(commons: CommonQueryDep) -> CommonQueryDep:
     return commons
 
 
-# Use dependencies= in path operation decorators
-# if you don't want a return value
-async def verify_token(x_token: Annotated[str, Header()]):
+async def verify_token(x_token: Annotated[str, Header()]) -> None:
     if x_token != "fake-super-secret-token":
         raise HTTPException(status_code=400, detail="X-Token header invalid")
 
 
-async def verify_key(x_key: Annotated[str, Header()]):
+async def verify_key(x_key: Annotated[str, Header()]) -> str:
     if x_key != "fake-super-secret-key":
         raise HTTPException(status_code=400, detail="X-Key header invalid")
     return x_key
 
 
+# Use dependencies= in path operation decorators
+# if you don't want a return value
 @router.get("/items/", dependencies=[Depends(verify_token), Depends(verify_key)])
-async def read_items2():
+async def read_items2() -> list[dict[str, str]]:
     return [{"item": "Foo"}, {"item": "Bar"}]
 
 
