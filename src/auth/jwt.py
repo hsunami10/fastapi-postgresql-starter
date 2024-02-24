@@ -20,6 +20,6 @@ def create_access_token(
 ) -> str:
     jwt_data = {"sub": str(subject), "exp": datetime.now(timezone.utc) + expires_delta}
     encoded_jwt = jwt.encode(
-        jwt_data, auth_settings.SECRET_KEY, algorithm=auth_settings.JWT_ALGORITHM
+        jwt_data, auth_settings.JWT_SECRET_KEY, algorithm=auth_settings.JWT_ALGORITHM
     )
     return encoded_jwt
