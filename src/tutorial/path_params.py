@@ -14,7 +14,7 @@ router = APIRouter(prefix="/path_params", tags=["Path Parameters"])
 # order matters - whatever endpoint is declared first is prioritized.
 # https://fastapi.tiangolo.com/tutorial/path-params/#order-matters
 @router.get("/similar_paths/me")
-async def read_user_me():
+async def read_user_me() -> dict[str, str]:
     return {"user_id": "the current user"}
 
 
@@ -36,7 +36,7 @@ class CompanyName(str, Enum):
 
 
 @router.get("/enums/{company_name}")
-async def get_model(company_name: CompanyName):
+async def get_model(company_name: CompanyName) -> dict[str, str]:
     if company_name is CompanyName.apple:
         return {"model_name": company_name, "message": "apple vision pro?"}
 
@@ -49,5 +49,5 @@ async def get_model(company_name: CompanyName):
 # Path params that are paths themselves
 # https://fastapi.tiangolo.com/tutorial/path-params/#path-parameters-containing-paths
 @router.get("/files/{file_path:path}")
-async def read_file(file_path: str):
+async def read_file(file_path: str) -> dict[str, str]:
     return {"file_path": file_path}

@@ -34,10 +34,10 @@ Basic status codes and descriptions:
 
 
 @router.post("/ok/", status_code=200)
-async def create_item(name: str):
+async def create_item(name: str) -> dict[str, str]:
     return {"name": name}
 
 
 @router.post("/created/", status_code=status.HTTP_201_CREATED)
-async def create_item(name: str):
+async def create_item2(name: str) -> dict[str, str]:
     return {"name": name}

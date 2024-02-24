@@ -13,7 +13,7 @@ router = APIRouter(prefix="/error_handling", tags=["Error Handling"])
 
 
 @router.get("/items/{item_id}")
-async def read_item(item_id: str):
+async def read_item(item_id: str) -> dict[str, str]:
     items = {"foo": "The Foo Wrestlers"}
     if item_id not in items:
         raise HTTPException(status_code=404, detail="Item not found")

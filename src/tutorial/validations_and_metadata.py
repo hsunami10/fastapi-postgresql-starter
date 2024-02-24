@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Any
 
 from fastapi import APIRouter, Body, Path, Query
 from pydantic import BaseModel, Field, HttpUrl
@@ -33,7 +33,7 @@ Metadata for OpenAPI docs
 General validations
 • default (var_type) - the default value if None is provided (only use for Pydantic)
 • for FastAPI functions, use var_name Annotated[...] = default_value
-• https://fastapi.tiangolo.com/tutorial/query-params-str-validations/#alternative-old-query-as-the-default-value
+• https://fastapi.tiangolo.com/tutorial/query-params-str-validations/#alternative-old-query-as-the-default-value # noqa: E501
 
 String validations
 • alias (str) - an alias for the parameter / body
@@ -87,7 +87,7 @@ async def read_item(
         Query(
             alias="item-query",
             title="Query string",
-            description="Query string for the items to search in the database that have a good match",
+            description="Query string for the items to search in the database that have a good match",  # noqa: E501
             min_length=3,
             max_length=50,
             pattern="fixedquery",
@@ -95,8 +95,8 @@ async def read_item(
             include_in_schema=True,
         ),
     ] = None,
-):
-    item = {"item_id": item_id}
+) -> dict[str, int | str]:
+    item: dict[str, int | str] = {"item_id": item_id}
     if q:
         item.update({"q": q})
     return item
@@ -104,7 +104,7 @@ async def read_item(
 
 # Examples in the JSON schema
 @router.post("/extra_json_schema_data")
-async def create_item(item: MetaItem):
+async def create_item(item: MetaItem) -> dict[str, Any]:
     return item.model_dump()
 
 
@@ -129,7 +129,7 @@ async def update_item(
                 },
                 "converted": {
                     "summary": "An example with converted data",
-                    "description": "FastAPI can convert price `strings` to actual `numbers` automatically",
+                    "description": "FastAPI can convert price `strings` to actual `numbers` automatically",  # noqa: E501
                     "value": {
                         "name": "Bar",
                         "price": "35.4",
@@ -145,6 +145,6 @@ async def update_item(
             },
         ),
     ],
-):
-    results = {"item_id": item_id, "item": item}
+) -> dict[str, int | MetaItem]:
+    results: dict[str, int | MetaItem] = {"item_id": item_id, "item": item}
     return results

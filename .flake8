@@ -2,3 +2,6 @@
 # Black Formatter's default value
 max-line-length = 88
 exclude = .git,__pycache__,__init__.py,.mypy_cache,.pytest_cache,alembic/*,temp_*
+
+# https://github.com/psf/black/issues/315#issuecomment-395457972
+ignore = E203

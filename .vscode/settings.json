@@ -6,7 +6,7 @@
       "source.organizeImports": "explicit"
     }
   },
-  "python.analysis.typeCheckingMode": "off", // disable pylance type-checking, mypy is used instead
+  "python.analysis.typeCheckingMode": "basic", // disable pylance type-checking, mypy is used instead
   "isort.args": ["--profile", "black"],
   "editor.fontSize": 14,
 }

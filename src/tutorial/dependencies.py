@@ -14,7 +14,7 @@ Annotated[type1, Depends(callable)]
 type1 should match the return type/output of calling callable()
 """
 
-from typing import Annotated
+from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, Header, HTTPException
 
@@ -36,13 +36,13 @@ CommonQueryDep = Annotated[CommonQueryParams, Depends(CommonQueryParams)]
 
 
 @router.get("/users/")
-async def read_users(commons: CommonQueryDep) -> CommonQueryDep:
-    return commons
+async def read_users(commons: CommonQueryDep) -> dict[str, Any]:
+    return commons.__dict__
 
 
 @router.get("/items/")
-async def read_items(commons: CommonQueryDep) -> CommonQueryDep:
-    return commons
+async def read_items(commons: CommonQueryDep) -> dict[str, Any]:
+    return commons.__dict__
 
 
 async def verify_token(x_token: Annotated[str, Header()]) -> None:

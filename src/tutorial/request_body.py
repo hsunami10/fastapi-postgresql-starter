@@ -3,7 +3,7 @@ Request Body (Pydantic Models)
 https://fastapi.tiangolo.com/tutorial/body/
 """
 
-from typing import Annotated
+from typing import Annotated, Any
 
 from fastapi import APIRouter, Body
 from pydantic import BaseModel, Field, HttpUrl
@@ -45,7 +45,7 @@ fake_items_db: list[dict] = []
 
 
 @router.post("/single")
-async def create_item(item: Item):
+async def create_item(item: Item) -> dict[str, Any]:
     item_dict = item.model_dump()
     if item.tax:
         price_with_tax = item.price + item.tax
@@ -56,25 +56,27 @@ async def create_item(item: Item):
 
 
 @router.put("/multiple_keys/{item_id}")
-async def update_item(item_id: int, item: Item, user: User):
+async def update_item(item_id: int, item: Item, user: User) -> dict[str, Any]:
     results = {"item_id": item_id, "item": item, "user": user}
     return results
 
 
 @router.post("/list/")
-async def create_multiple_images(images: list[Image]):
+async def create_multiple_images(images: list[Image]) -> list[Image]:
     return images
 
 
 @router.put("/spread/{item_id}")
-async def update_item(item_id: int, item: Item):
+async def update_item2(item_id: int, item: Item) -> dict[str, Any]:
     # ** is like a spread operator in JavaScript
     return {"item_id": item_id, **item.model_dump()}
 
 
 # Using singular values (not dicts) in request body
 @router.put("/scalar_value/{item_id}")
-async def update_item(item_id: int, item: Item, importance: Annotated[int, Body(gt=0)]):
+async def update_item3(
+    item_id: int, item: Item, importance: Annotated[int, Body(gt=0)]
+) -> dict[str, Any]:
     results = {"item_id": item_id, "item": item, "importance": importance}
     return results
 
@@ -82,12 +84,14 @@ async def update_item(item_id: int, item: Item, importance: Annotated[int, Body(
 # Instead of {name: ..., description: ...}, embed would make it
 # {item: {name: ..., description: ...}}
 @router.put("/embed/{item_id}")
-async def update_item(item_id: int, item: Annotated[Item, Body(embed=True)]):
+async def update_item4(
+    item_id: int, item: Annotated[Item, Body(embed=True)]
+) -> dict[str, Any]:
     results = {"item_id": item_id, "item": item}
     return results
 
 
 # Allow JSON with any key-value pairs
 @router.post("/arbitrary_dicts/")
-async def create_index_weights(weights: dict[int, float]):
+async def create_index_weights(weights: dict[int, float]) -> dict[int, float]:
     return weights
