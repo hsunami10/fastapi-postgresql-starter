@@ -18,6 +18,7 @@ services:
       - ./:/opt/app/
     networks:
       - backnet
+  # Same as POSTGRES_SERVER
   db:
     image: postgres:16
     environment:
