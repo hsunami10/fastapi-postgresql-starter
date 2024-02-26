@@ -1,10 +1,12 @@
 from datetime import datetime, timedelta, timezone
-from typing import Any
+from typing import Any, Annotated
 
+from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
 
 from src.auth.config import auth_settings
+from src.auth.exceptions import AuthorizationFailed, AuthRequired, InvalidToken
 from src.config import settings
 
 oauth2_scheme = OAuth2PasswordBearer(
@@ -23,3 +25,8 @@ def create_access_token(
         jwt_data, auth_settings.JWT_SECRET_KEY, algorithm=auth_settings.JWT_ALGORITHM
     )
     return encoded_jwt
+
+TokenDep = Annotated[str, Depends(oauth2_scheme)]
+
+def parse_jwt_data_from_token(token: TokenDep):
+    

@@ -4,7 +4,7 @@ from pydantic_settings import BaseSettings
 
 
 class AuthSettings(BaseSettings):
-    # 10 minutes: set it to something higher in .env for development
+    # 10 minutes: set it to something higher in the .env file for development
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 10
     JWT_SECRET_KEY: str = secrets.token_urlsafe(32)  # or openssl rand -hex 32
     JWT_ALGORITHM: str = "HS256"

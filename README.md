@@ -71,6 +71,7 @@ docker run -d -p 3000:8000 hsunami10/fastapi-postgresql-starter
 ### FastAPI
 
 - [dependencies tutorial](https://fastapi.tiangolo.com/tutorial/dependencies/)
+- [use ruff](https://docs.astral.sh/ruff/) instead of isort, black, and flake8
 
 ### Docker
 
