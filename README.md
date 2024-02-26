@@ -87,7 +87,7 @@ alembic downgrade -1
 
 ### FastAPI
 
-- [dependencies tutorial](https://fastapi.tiangolo.com/tutorial/dependencies/)
+- [add scripts for alembic migrations](https://github.com/zhanymkanov/fastapi_production_template/tree/main/scripts)
 - [use ruff](https://docs.astral.sh/ruff/) instead of isort, black, and flake8
 - add pre-commit hooks (type-checking, linting, formatting)
 
