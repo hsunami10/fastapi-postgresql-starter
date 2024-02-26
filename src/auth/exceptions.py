@@ -1,4 +1,4 @@
-from src.exceptions import BadRequest, NotAuthenticated, PermissionDenied
+from src.core.exceptions import BadRequest, NotAuthenticated, PermissionDenied
 
 
 class ErrorDetail:

@@ -7,7 +7,7 @@ from jose import jwt
 
 from src.auth.config import auth_settings
 from src.auth.exceptions import AuthorizationFailed, AuthRequired, InvalidToken
-from src.config import settings
+from src.core.config import settings
 
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl=f"{settings.API_V1_PREFIX}/login/access-token"
