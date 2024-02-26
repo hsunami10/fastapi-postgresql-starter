@@ -46,7 +46,7 @@ class Settings(BaseSettings):
             return None
         return v
 
-    POSTGRES_SERVER: str
+    POSTGRES_HOST: str
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str
@@ -60,7 +60,7 @@ class Settings(BaseSettings):
             scheme="postgresql+asyncpg",  # async driver
             username=values.get("POSTGRES_USER"),
             password=values.get("POSTGRES_PASSWORD"),
-            host=values.get("POSTGRES_SERVER"),
+            host=values.get("POSTGRES_HOST"),
             path=f"/{values.get('POSTGRES_DB') or ''}",
         )
 

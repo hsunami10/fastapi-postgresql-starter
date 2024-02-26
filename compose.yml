@@ -4,13 +4,16 @@ version: "3.8"
 
 services:
   backend:
-    image: ${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}
+    # Need .env file for this to work
+    # image: ${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}
+    image: hsunami10/fastapi-postgresql-starter
     env_file:
       - .env.template # TODO: change to .env
     build:
       context: .
       dockerfile: Dockerfile
       args:
+        # Override this when running "docker compose"
         - INSTALL_DEV_DEPS=${INSTALL_DEV_DEPS-true}
     restart: always
     ports:
@@ -21,7 +24,7 @@ services:
       - ./:/opt/app/
     networks:
       - backnet
-  # Same as POSTGRES_SERVER
+  # Same as POSTGRES_HOST
   db:
     image: postgres:16
     environment:
