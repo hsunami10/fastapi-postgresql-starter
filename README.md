@@ -26,9 +26,26 @@ Connection Fields:
 ## Docker
 
 ```sh
-docker build -t hsunami10/fastapi-postgresql-starter . --build-arg INSTALL_DEV_DEPS=development
+# Workflow:
 
-docker run -d -p 3000:8000 hsunami10/fastapi-postgresql-starter
+# Run with --build if there are changes in: poetry deps, Dockerfile, compose.*.yml
+# Otherwise, run without --build
+docker compose up -d --build
+```
+
+## Alembic
+
+https://medium.com/@johnidouglasmarangon/using-migrations-in-python-sqlalchemy-with-alembic-docker-solution-bd79b219d6a
+
+```sh
+# Make a new migration
+alembic revision -m "revision name"
+
+# Run all migrations
+alembic upgrade head
+
+# Downgrade by x (ex. 1) migration
+alembic downgrade -1
 ```
 
 ## Resources

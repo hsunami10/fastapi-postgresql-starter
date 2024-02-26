@@ -7,7 +7,7 @@ ARG INSTALL_DEV_DEPS
 
 # Install required packages and clean up disc space
 RUN apt-get update && \
-    apt-get install -y curl && \
+    apt-get install -y curl emacs && \
     apt clean && \
     rm -rf /var/cache/apt/* && \
     rm -rf /var/lib/apt/lists/*

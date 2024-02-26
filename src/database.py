@@ -51,7 +51,7 @@ refresh_token_table = Table(
     metadata,
     Column("uuid", UUID, primary_key=True),
     Column("user_id", ForeignKey("app_user.id", ondelete="CASCADE"), nullable=False),
-    Column("refresh_token", String, nullable=False),
+    Column("token", String, nullable=False),
     Column("expires_at", DateTime(timezone=True), nullable=False),
     Column(
         "created_at", DateTime(timezone=True), server_default=func.now(), nullable=False

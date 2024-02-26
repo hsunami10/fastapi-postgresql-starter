@@ -1,9 +1,12 @@
 # for dev environment
+# TODO: Refactor to compose.override.yml (dev) and compose.yml for prod
 version: "3.8"
 
 services:
   backend:
-    image: hsunami10/fastapi-postgresql-starter
+    image: ${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}
+    env_file:
+      - .env.template # TODO: change to .env
     build:
       context: .
       dockerfile: Dockerfile
@@ -24,7 +27,7 @@ services:
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
     env_file:
-      - .env.template # changethis to .env
+      - .env.template # TODO: change to .env
     ports:
       - 5555:5432
     volumes:

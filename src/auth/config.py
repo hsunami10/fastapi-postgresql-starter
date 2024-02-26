@@ -2,8 +2,12 @@ import secrets
 
 from pydantic_settings import BaseSettings
 
+from src.core.config import SETTINGS_CONFIG
+
 
 class AuthSettings(BaseSettings):
+    model_config = SETTINGS_CONFIG
+
     # 10 minutes: set it to something higher in the .env file for development
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 10
     JWT_SECRET_KEY: str = secrets.token_urlsafe(32)  # or openssl rand -hex 32

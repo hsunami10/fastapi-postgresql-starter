@@ -6,7 +6,9 @@ from fastapi.exception_handlers import (
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, PlainTextResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
+from starlette.middleware.cors import CORSMiddleware
 
+from src.core.config import settings
 from src.tutorial import (
     cookie_header_router,
     dependencies_router,
@@ -19,7 +21,16 @@ from src.tutorial import (
     validations_router,
 )
 
-app = FastAPI()
+app = FastAPI(title=settings.PROJECT_NAME)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.CORS_ORIGINS,
+    allow_origin_regex=settings.CORS_ORIGINS_REGEX,
+    allow_credentials=True,
+    allow_methods=("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"),  # ["*"]
+    allow_headers=settings.CORS_HEADERS,  # ["*"]
+)
 
 
 @app.get("/")
