@@ -1,3 +1,4 @@
+# TODO: refactor
 from typing import Any
 
 from sqlalchemy import (
@@ -60,7 +61,6 @@ refresh_token_table = Table(
 )
 
 
-# TODO: refactor
 async def fetch_one(select_query: Select | Insert | Update) -> dict[str, Any] | None:
     async with engine.begin() as conn:
         cursor: CursorResult = await conn.execute(select_query)

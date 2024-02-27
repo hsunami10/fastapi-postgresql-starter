@@ -1,21 +1,19 @@
 import secrets
 from typing import Any
 
-from pydantic import AnyHttpUrl, EmailStr, HttpUrl, PostgresDsn, validator
+from pydantic import AnyHttpUrl, HttpUrl, PostgresDsn, validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from src.core.constants import Environment
 
-SETTINGS_CONFIG = SettingsConfigDict(
-    env_file=(".env", ".env.prod"),
-    env_file_encoding="utf-8",
-    case_sensitive=True,
-    extra="allow",
-)
-
 
 class Settings(BaseSettings):
-    model_config = SETTINGS_CONFIG
+    model_config = SettingsConfigDict(
+        env_file=(".env", ".env.prod"),
+        env_file_encoding="utf-8",
+        case_sensitive=True,
+        extra="allow",
+    )
 
     API_V1_PREFIX: str = "/api/v1"
 
@@ -48,7 +46,7 @@ class Settings(BaseSettings):
     # CORS Settings
     CORS_HEADERS: list[str] = []
     CORS_ORIGINS_REGEX: str | None = None
-    CORS_ORIGINS: list[str] = []
+    CORS_ORIGINS: list[AnyHttpUrl] = []
 
     # TODO: change the field_validator, validator is deprecated in Pydantic v2
     @validator("CORS_ORIGINS", pre=True)

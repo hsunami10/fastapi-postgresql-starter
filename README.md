@@ -42,8 +42,8 @@ docker compose exec <service_name> bash
 
 Services:
 
-- `backend` - FastAPI web server
-- `db` - PostgreSQL database server
+- `backend-api` - FastAPI web server
+- `pg-db` - PostgreSQL database server
 
 ## Alembic
 

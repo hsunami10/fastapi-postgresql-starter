@@ -34,7 +34,7 @@ target_metadata = metadata
 
 user = os.getenv("POSTGRES_USER", "postgres")
 password = os.getenv("POSTGRES_PASSWORD", "")
-host = os.getenv("POSTGRES_HOST", "db")
+host = os.getenv("POSTGRES_HOST", "pg-db")
 db_name = os.getenv("POSTGRES_DB", "app")
 
 # Sync driver

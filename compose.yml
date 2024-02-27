@@ -3,8 +3,8 @@
 version: "3.8"
 
 services:
-  backend:
-    image: ${DOCKER_IMAGE_BACKEND?Variable not set in env}:${TAG-latest}
+  backend-api:
+    image: ${DOCKER_IMAGE_BACKEND_API?Variable not set in env}:${TAG-latest}
     env_file:
       - .env
     build:
@@ -17,13 +17,14 @@ services:
     ports:
       - 8080:8000
     depends_on:
-      - db
+      - pg-db
     volumes:
       - ./:/opt/app/
     networks:
+      - frontnet
       - backnet
   # Same as POSTGRES_HOST
-  db:
+  pg-db:
     image: postgres:16
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
@@ -40,5 +41,5 @@ volumes:
   db-data:
 
 networks:
-  # frontnet:
+  frontnet:
   backnet:
