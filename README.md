@@ -45,19 +45,17 @@ Services:
 - `backend-api` - FastAPI web server
 - `pg-db` - PostgreSQL database server
 
-## Alembic
-
-https://medium.com/@johnidouglasmarangon/using-migrations-in-python-sqlalchemy-with-alembic-docker-solution-bd79b219d6a
+## [Migrations (Alembic)](https://medium.com/@johnidouglasmarangon/using-migrations-in-python-sqlalchemy-with-alembic-docker-solution-bd79b219d6a)
 
 ```sh
 # Make a new migration
-alembic revision -m "revision name"
+docker compose exec backend-api makemigrations "migration name"
 
 # Run all migrations
-alembic upgrade head
+docker compose exec backend-api migrate
 
 # Downgrade by x (ex. 1) migration
-alembic downgrade -1
+docker compose exec backend-api downgrade -1
 ```
 
 ## Resources
@@ -105,6 +103,7 @@ alembic downgrade -1
 
 ### Docker
 
+- scripts need `chmod +x` (executable) permissions on host computer to work... which doesn't require permissions from the container's user. is that secure?
 - split `compose.yml` file into `compose.yml` and `compose.override.yml` + clean up
   - [working with multiple compose files](https://docs.docker.com/compose/multiple-compose-files/)
   - [compose in prod](https://docs.docker.com/compose/production/)
