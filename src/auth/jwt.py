@@ -5,7 +5,6 @@ from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
 
-from src.auth.config import auth_settings
 from src.core.config import settings
 
 oauth2_scheme = OAuth2PasswordBearer(
@@ -16,12 +15,12 @@ oauth2_scheme = OAuth2PasswordBearer(
 def create_access_token(
     subject: str | Any,
     expires_delta: timedelta = timedelta(
-        minutes=auth_settings.ACCESS_TOKEN_EXPIRE_MINUTES
+        minutes=settings.JWT_ACCESS_TOKEN_EXPIRE_MINUTES
     ),
 ) -> str:
     jwt_data = {"sub": str(subject), "exp": datetime.now(timezone.utc) + expires_delta}
     encoded_jwt = jwt.encode(
-        jwt_data, auth_settings.JWT_SECRET_KEY, algorithm=auth_settings.JWT_ALGORITHM
+        jwt_data, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM
     )
     return encoded_jwt
 

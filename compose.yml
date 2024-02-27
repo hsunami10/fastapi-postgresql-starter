@@ -4,11 +4,9 @@ version: "3.8"
 
 services:
   backend:
-    # Need .env file for this to work
-    # image: ${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}
-    image: hsunami10/fastapi-postgresql-starter
+    image: ${DOCKER_IMAGE_BACKEND?Variable not set in env}:${TAG-latest}
     env_file:
-      - .env.template # TODO: change to .env
+      - .env
     build:
       context: .
       dockerfile: Dockerfile
@@ -30,7 +28,7 @@ services:
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
     env_file:
-      - .env.template # TODO: change to .env
+      - .env
     ports:
       - 5555:5432
     volumes:

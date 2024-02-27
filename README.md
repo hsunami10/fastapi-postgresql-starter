@@ -28,10 +28,22 @@ Connection Fields:
 ```sh
 # Workflow:
 
-# Run with --build if there are changes in: poetry deps, Dockerfile, compose.*.yml
-# Otherwise, run without --build
-docker compose up -d --build
+docker compose up -d # --build (if there are changes in: poetry deps, Dockerfile, compose.*.yml)
+
+# Terminal docker compose services
+docker compose down # -v (to delete persisted volumes/data)
+
+# Attach to see terminal output
+docker compose attach <service_name>
+
+# Start a terminal in a service
+docker compose exec <service_name> bash
 ```
+
+Services:
+
+- `backend` - FastAPI web server
+- `db` - PostgreSQL database server
 
 ## Alembic
 

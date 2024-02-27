@@ -1,14 +1,17 @@
+import secrets
 from typing import Any
 
 from pydantic import AnyHttpUrl, EmailStr, HttpUrl, PostgresDsn, validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from src.core.constants import Environment
+
 SETTINGS_CONFIG = SettingsConfigDict(
-    env_file=(".env.template", ".env", ".env.prod"),
+    env_file=(".env", ".env.prod"),
     env_file_encoding="utf-8",
     case_sensitive=True,
     extra="allow",
-)  # TODO: change to .env
+)
 
 
 class Settings(BaseSettings):
@@ -16,36 +19,14 @@ class Settings(BaseSettings):
 
     API_V1_PREFIX: str = "/api/v1"
 
-    SITE_DOMAIN: str = "http://127.0.0.1"
-
-    # CORS Settings
-    CORS_ORIGINS: list[str] = []
-    CORS_ORIGINS_REGEX: str | None = None
-    CORS_HEADERS: list[str] = []
-
-    # BACKEND_CORS_ORIGINS is a JSON-formatted list of origins
-    # e.g: '["http://localhost", "http://localhost:4200", "http://localhost:3000", \
-    # "http://localhost:8080", "http://local.dockertoolbox.tiangolo.com"]'
-    BACKEND_CORS_ORIGINS: list[AnyHttpUrl] = []
-
-    # TODO: change the field_validator, validator is deprecated in Pydantic v2
-    @validator("BACKEND_CORS_ORIGINS", pre=True)
-    def assemble_cors_origins(cls, v: str | list[str]) -> list[str] | str:
-        if isinstance(v, str) and not v.startswith("["):
-            return [i.strip() for i in v.split(",")]
-        elif isinstance(v, (list, str)):
-            return v
-        raise ValueError(v)
-
     PROJECT_NAME: str
-    SENTRY_DSN: HttpUrl | None = None
+    ENVIRONMENT: Environment = Environment.PRODUCTION
 
-    @validator("SENTRY_DSN", pre=True)
-    def sentry_dsn_can_be_blank(cls, v: str | None) -> str | None:
-        if v is None or len(v) == 0:
-            return None
-        return v
+    # TODO: change for prod
+    SITE_DOMAIN: str = "https://myappdomain.com"
+    SECURE_COOKIES: bool = True
 
+    # Postgres Configuration
     POSTGRES_HOST: str
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
@@ -64,12 +45,41 @@ class Settings(BaseSettings):
             path=f"/{values.get('POSTGRES_DB') or ''}",
         )
 
-    SMTP_TLS: bool = True
-    SMTP_PORT: int | None = None
-    SMTP_HOST: str | None = None
-    SMTP_USER: str | None = None
-    SMTP_PASSWORD: str | None = None
-    EMAILS_FROM_EMAIL: EmailStr | None = None
+    # CORS Settings
+    CORS_HEADERS: list[str] = []
+    CORS_ORIGINS_REGEX: str | None = None
+    CORS_ORIGINS: list[str] = []
+
+    # TODO: change the field_validator, validator is deprecated in Pydantic v2
+    @validator("CORS_ORIGINS", pre=True)
+    def assemble_cors_origins(cls, v: str | list[str]) -> list[str] | str:
+        if isinstance(v, str) and not v.startswith("["):
+            return [i.strip() for i in v.split(",")]
+        elif isinstance(v, (list, str)):
+            return v
+        raise ValueError(v)
+
+    # 10 minutes: set it to something higher in the .env file for development
+    JWT_ALGORITHM: str = "HS256"
+    JWT_SECRET_KEY: str = secrets.token_urlsafe(32)  # or openssl rand -hex 32
+    JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = 10
+
+    SENTRY_DSN: HttpUrl | None = None
+
+    @validator("SENTRY_DSN", pre=True)
+    def sentry_dsn_can_be_blank(cls, v: str | None) -> str | None:
+        if v is None or len(v) == 0:
+            return None
+        return v
+
+    # FIRST_SUPERUSER: EmailStr
+    # FIRST_SUPERUSER_PASSWORD: str
+    # SMTP_TLS: bool = True
+    # SMTP_PORT: int | None = None
+    # SMTP_HOST: str | None = None
+    # SMTP_USER: str | None = None
+    # SMTP_PASSWORD: str | None = None
+    # EMAILS_FROM_EMAIL: EmailStr | None = None
     # EMAILS_FROM_NAME: str | None = None
 
     # @validator("EMAILS_FROM_NAME")
@@ -78,23 +88,27 @@ class Settings(BaseSettings):
     #         return values["PROJECT_NAME"]
     #     return v
 
-    EMAIL_RESET_TOKEN_EXPIRE_HOURS: int = 48
-    EMAIL_TEMPLATES_DIR: str = "/app/app/email-templates/build"
-    EMAILS_ENABLED: bool = False
+    # USERS_OPEN_REGISTRATION: bool = False
 
-    @validator("EMAILS_ENABLED", pre=True)
-    def get_emails_enabled(cls, v: bool, values: dict[str, Any]) -> bool:
-        return bool(
-            values.get("SMTP_HOST")
-            and values.get("SMTP_PORT")
-            and values.get("EMAILS_FROM_EMAIL")
-        )
+    # EMAIL_RESET_TOKEN_EXPIRE_HOURS: int = 48
+    # EMAIL_TEMPLATES_DIR: str = "/app/app/email-templates/build"
+    # EMAILS_ENABLED: bool = False
 
-    EMAIL_TEST_USER: EmailStr = "test@example.com"  # type: ignore
-    FIRST_SUPERUSER: EmailStr
-    FIRST_SUPERUSER_PASSWORD: str
-    USERS_OPEN_REGISTRATION: bool = False
+    # @validator("EMAILS_ENABLED", pre=True)
+    # def get_emails_enabled(cls, v: bool, values: dict[str, Any]) -> bool:
+    #     return bool(
+    #         values.get("SMTP_HOST")
+    #         and values.get("SMTP_PORT")
+    #         and values.get("EMAILS_FROM_EMAIL")
+    #     )
+
+    # EMAIL_TEST_USER: EmailStr = "test@example.com"  # type: ignore
+
+    # # TODO: Implement refresh tokens
+    # REFRESH_TOKEN_KEY: str = "refreshToken"
+    # # https://fusionauth.io/articles/tokens/revoking-jwts
+    # # https://www.loginradius.com/blog/identity/refresh-tokens-jwt-interaction/
+    # REFRESH_TOKEN_EXPIRE_SECONDS: int = 60 * 60 * 24 * 21  # 21 days
 
 
 settings = Settings()
-print(settings.model_dump)
