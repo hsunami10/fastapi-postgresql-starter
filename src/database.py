@@ -34,8 +34,8 @@ DB_NAMING_CONVENTION = {
 engine = create_async_engine(str(settings.SQLALCHEMY_DATABASE_URI))
 metadata = MetaData(naming_convention=DB_NAMING_CONVENTION)
 
-app_user_table = Table(
-    "app_user",
+auth_user_table = Table(
+    "auth_user",
     metadata,
     Column("id", Integer, Identity(), primary_key=True),
     Column("email", String, nullable=False),
@@ -51,7 +51,7 @@ refresh_token_table = Table(
     "refresh_token",
     metadata,
     Column("uuid", UUID, primary_key=True),
-    Column("user_id", ForeignKey("app_user.id", ondelete="CASCADE"), nullable=False),
+    Column("user_id", ForeignKey("auth_user.id", ondelete="CASCADE"), nullable=False),
     Column("token", String, nullable=False),
     Column("expires_at", DateTime(timezone=True), nullable=False),
     Column(
@@ -61,6 +61,7 @@ refresh_token_table = Table(
 )
 
 
+# TODO: refactor
 async def fetch_one(select_query: Select | Insert | Update) -> dict[str, Any] | None:
     async with engine.begin() as conn:
         cursor: CursorResult = await conn.execute(select_query)

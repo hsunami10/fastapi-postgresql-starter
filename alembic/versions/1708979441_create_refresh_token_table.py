@@ -28,7 +28,7 @@ def upgrade() -> None:
         sa.Column(
             "user_id",
             sa.Integer,
-            sa.ForeignKey("app_user.id", ondelete="CASCADE"),
+            sa.ForeignKey("auth_user.id", ondelete="CASCADE"),
             nullable=False,
         ),
         sa.Column("token", sa.String, nullable=False),

@@ -1,4 +1,4 @@
-"""create app_user table
+"""create auth user table
 
 Revision ID: 094ab13e6cd0
 Revises: 
@@ -18,7 +18,7 @@ down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
-TABLE_NAME: str = "app_user"
+TABLE_NAME: str = "auth_user"
 
 
 def upgrade() -> None:
