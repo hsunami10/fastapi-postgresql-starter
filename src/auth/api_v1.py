@@ -25,4 +25,5 @@ async def login_for_access_token(
     )
     user = await authenticate_user(auth_data)
     access_token = create_access_token(user)
+    # TODO: add functionality to create refresh tokens too
     return AccessTokenResponse(access_token=access_token, token_type="bearer")
