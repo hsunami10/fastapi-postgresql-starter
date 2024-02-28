@@ -1,40 +1,48 @@
-from pydantic import ConfigDict, EmailStr
+import re
+
+from pydantic import EmailStr, Field, field_validator
 
 from src.core.schemas import CoreModel
 
-
-# Shared properties
-class AuthUserBase(CoreModel):
-    email: EmailStr | None = None
-    is_active: bool = True
-    is_superuser: bool = False
-    full_name: str | None = None
+STRONG_PASSWORD_PATTERN = re.compile(r"^(?=.*[\d])(?=.*[!@#$%^&*])[\w!@#$%^&*]{6,128}$")
 
 
-# Properties to receive via API on creation
-class AuthUserCreate(AuthUserBase):
+def validate_password(password: str) -> str:
+    """Validate the password with regex.
+
+    Args:
+        password (str): The value of the field "password"
+    """
+    if not re.match(STRONG_PASSWORD_PATTERN, password):
+        raise ValueError(
+            "Password must contain at least "
+            "one lower character, "
+            "one upper character, "
+            "digit or "
+            "special symbol"
+        )
+
+    return password
+
+
+class AuthUserRequestForm(CoreModel):
+    email: EmailStr
+    password: str = Field(min_length=6, max_length=128)
+
+    check_valid_password = field_validator("password", mode="after")(validate_password)
+
+
+class AuthUserDB(CoreModel):
+    """
+    Pydantic model for SQLAlchemy auth_user table.
+    """
+
+    id: int
     email: EmailStr
     password: str
 
+    check_valid_password = field_validator("password", mode="after")(validate_password)
 
-# Properties to receive via API on update
-class AuthUserUpdate(AuthUserBase):
-    password: str | None = None
-
-
-class AuthUserInDBBase(AuthUserBase):
-    # https://docs.pydantic.dev/latest/concepts/models/#arbitrary-class-instances
-    model_config = ConfigDict(from_attributes=True)
-
-
-# Additional properties to return via API
-class AuthUser(AuthUserInDBBase):
-    pass
-
-
-class AuthUserInDBCore(CoreModel):
-    id: int
-    email: EmailStr
     is_admin: bool
 
     # TODO: figure out how to map sqlalchemy datetime to pydantic
@@ -42,20 +50,10 @@ class AuthUserInDBCore(CoreModel):
     # updated_at: datetime | None = None
 
 
-# Additional properties stored in DB
-class AuthUserInDBPassword(AuthUserInDBBase):
-    password: str
+class JWTData(CoreModel):
+    sub: str | None = None
 
 
 class AccessTokenResponse(CoreModel):
     access_token: str
     token_type: str
-
-
-class JWTData(CoreModel):
-    sub: str | None = None
-    is_admin: bool = False
-
-
-class TokenPayload(CoreModel):
-    sub: int | None = None

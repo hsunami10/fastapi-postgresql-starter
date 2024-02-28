@@ -1,28 +1,32 @@
 from datetime import datetime, timedelta, timezone
-from typing import Annotated, Any
+from typing import Annotated
 
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
-from sqlalchemy import select
 
 from src.auth.exceptions import AuthRequired, InvalidCredentials, InvalidToken
-from src.auth.schemas import AuthUserInDBCore, JWTData
+from src.auth.schemas import AuthUserDB, JWTData
+from src.auth.service import get_user_by_id
 from src.core.config import settings
-from src.database import auth_user_table, engine
+from src.core.constants import ApiVersionPrefixes
 
 oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl=f"{settings.API_V1_PREFIX}/login/access-token"
+    tokenUrl=f"{ApiVersionPrefixes.API_V1_PREFIX}/login/access-token"
 )
 
 
 def create_access_token(
-    subject: str | Any,
+    user: AuthUserDB,
     expires_delta: timedelta = timedelta(
         minutes=settings.JWT_ACCESS_TOKEN_EXPIRE_MINUTES
     ),
 ) -> str:
-    jwt_data = {"sub": str(subject), "exp": datetime.now(timezone.utc) + expires_delta}
+    jwt_data = {
+        "sub": str(user.id),
+        "exp": datetime.now(timezone.utc) + expires_delta,
+        "is_admin": bool(user.is_admin),
+    }
     encoded_jwt = jwt.encode(
         jwt_data, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM
     )
@@ -46,19 +50,7 @@ def parse_jwt_from_token(token: TokenDep) -> JWTData:
     return JWTData(**payload)
 
 
-# TODO: return pydantic user model
-async def get_user_from_db(user_id: str) -> AuthUserInDBCore | None:
-    query = select(auth_user_table).where(auth_user_table.c.id == user_id)
-    async with engine.begin() as conn:
-        result = await conn.execute(query)
-
-        if result.rowcount > 0:
-            first_row = result.first()
-            return AuthUserInDBCore(**first_row._asdict()) if first_row else None
-        return None
-
-
-async def get_current_user(token: TokenDep) -> AuthUserInDBCore:
+async def get_current_user(token: TokenDep) -> AuthUserDB:
     """
     Validate token and get current user.
     """
@@ -70,7 +62,7 @@ async def get_current_user(token: TokenDep) -> AuthUserInDBCore:
     except JWTError:
         raise InvalidCredentials()
 
-    user = await get_user_from_db(user_id)
+    user = await get_user_by_id(user_id)
     if user is None:
         raise InvalidCredentials()
     return user

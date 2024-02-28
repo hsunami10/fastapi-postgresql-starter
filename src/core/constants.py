@@ -18,3 +18,7 @@ class Environment(str, Enum):
     @property
     def is_deployed(self) -> bool:
         return self in (self.STAGING, self.PRODUCTION)
+
+
+class ApiVersionPrefixes:
+    API_V1_PREFIX: str = "/api/v1"

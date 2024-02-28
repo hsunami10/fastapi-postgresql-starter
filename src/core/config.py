@@ -15,8 +15,6 @@ class Settings(BaseSettings):
         extra="allow",
     )
 
-    API_V1_PREFIX: str = "/api/v1"
-
     PROJECT_NAME: str
     ENVIRONMENT: Environment = Environment.PRODUCTION
 
