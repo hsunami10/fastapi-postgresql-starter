@@ -8,22 +8,36 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 
-from src.auth.jwt import create_access_token
-from src.auth.schemas import AccessTokenResponse, AuthUserRequestForm
-from src.auth.service import authenticate_user
+from src.auth import jwt, service
+from src.auth.jwt import CurrentUser
+from src.auth.schemas import AccessTokenResponse, AuthUserRequestForm, UserResponse
 from src.core.constants import ApiVersionPrefixes
+from src.core.exceptions import BadRequest
 
-router = APIRouter(prefix=f"{ApiVersionPrefixes.API_V1_PREFIX}/auth")
+auth_v1_router = APIRouter(
+    prefix=ApiVersionPrefixes.AUTH_API_V1_PREFIX,
+    tags=["Authentication Router (v1)"],
+)
 
 
-@router.post("/login/access-token", response_model=AccessTokenResponse)
+@auth_v1_router.post("/login/access-token", response_model=AccessTokenResponse)
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
 ) -> AccessTokenResponse:
-    auth_data = AuthUserRequestForm(
-        email=form_data.username, password=form_data.password
-    )
-    user = await authenticate_user(auth_data)
-    access_token = create_access_token(user)
+    try:
+        auth_data = AuthUserRequestForm(
+            email=form_data.username, password=form_data.password
+        )
+    except ValueError as exc:
+        raise BadRequest(detail=str(exc))
+
+    user = await service.authenticate_user(auth_data)
     # TODO: add functionality to create refresh tokens too
-    return AccessTokenResponse(access_token=access_token, token_type="bearer")
+    return AccessTokenResponse(
+        access_token=jwt.create_access_token(user), token_type="bearer"
+    )
+
+
+@auth_v1_router.get("/users/me", response_model=UserResponse)
+async def read_user_me(current_user: CurrentUser) -> dict[str, str]:
+    return current_user

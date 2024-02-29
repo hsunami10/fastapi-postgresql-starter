@@ -4,15 +4,20 @@ from sqlalchemy import (
     DateTime,
     ForeignKey,
     Identity,
+    Insert,
     Integer,
     LargeBinary,
+    Select,
     String,
     Table,
+    Update,
     func,
+    select,
 )
 from sqlalchemy.dialects.postgresql import UUID
 
-from src.database.tables import metadata
+from src.auth.schemas import AuthUserDB
+from src.core.database import engine, metadata
 
 auth_user_table = Table(
     "auth_user",
@@ -39,3 +44,25 @@ refresh_token_table = Table(
     ),
     Column("updated_at", DateTime(timezone=True), onupdate=func.now()),
 )
+
+
+async def fetch_one(query: Select | Insert | Update) -> AuthUserDB | None:
+    async with engine.begin() as conn:
+        result = await conn.execute(query)
+
+        first_row = result.first()
+        return AuthUserDB(**first_row._asdict()) if first_row else None
+
+
+async def fetch_one_by_id(user_id: str) -> AuthUserDB | None:
+    if user_id is None:
+        return None
+    query = select(auth_user_table).where(auth_user_table.c.id == user_id)
+    return await fetch_one(query)
+
+
+async def fetch_one_by_email(email: str) -> AuthUserDB | None:
+    if email is None:
+        return None
+    query = select(auth_user_table).where(auth_user_table.c.email == email)
+    return await fetch_one(query)

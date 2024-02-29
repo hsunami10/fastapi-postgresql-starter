@@ -5,10 +5,14 @@ from fastapi.exception_handlers import (
 )
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, PlainTextResponse
+from pydantic import ValidationError
+from pydantic_core import ErrorDetails
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.middleware.cors import CORSMiddleware
 
+from src.auth.api_v1 import auth_v1_router
 from src.core.config import settings
+from src.core.exceptions import BadRequest
 from src.tutorial import (
     cookie_header_router,
     dependencies_router,
@@ -33,20 +37,41 @@ app.add_middleware(
 )
 
 
-@app.get("/")
-async def root() -> dict[str, str]:
-    return {"hello": "world"}
-
-
 @app.get("/healthcheck", include_in_schema=False)
 async def healthcheck() -> dict[str, str]:
     return {"status": "ok"}
 
 
-@app.get("/ping")
-async def ping() -> dict[str, bool]:
-    return {"pong": True}
+# Re-use FastAPI exception handlers (useful for logging or debugging)
+# https://fastapi.tiangolo.com/tutorial/handling-errors/#re-use-fastapis-exception-handlers
+@app.exception_handler(StarletteHTTPException)
+async def custom_http_exception_handler2(request: Request, exc: StarletteHTTPException):
+    print(f"Logging HTTP error: {repr(exc)}")
+    return await http_exception_handler(request, exc)
 
+
+# Override Pydantic ValidationError messages example.
+# TODO: Delete this later
+# CUSTOM_ERROR_MESSAGES = {
+#     "email": {
+#         "value_error": "The email address is not valid. It must have exactly one @-sign."
+#     },
+#     "password": {"string_too_short": "String should have at least 6 characters"},
+# }
+# @app.exception_handler(ValidationError)
+# def validation_error_exception_handler(request: Request, exc: ValidationError):
+#     custom_messages: list[str] = []
+#     for error in exc.errors():
+#         for loc in error["loc"]:
+#             custom_message = CUSTOM_ERROR_MESSAGES[loc][error["type"]] or error["msg"]
+#             custom_messages.append(custom_message)
+#     return JSONResponse(
+#         status_code=BadRequest.STATUS_CODE,
+#         content={"message": str("\n".join(custom_messages))},
+#     )
+
+
+app.include_router(auth_v1_router)
 
 app.include_router(path_params_router)
 app.include_router(query_params_router)
@@ -84,21 +109,6 @@ async def read_unicorn(name: str):
     if name == "yolo":
         raise UnicornException(name=name)
     return {"unicorn_name": name}
-
-
-# Overriding pre-existing exception handlers
-# NOTE: not sure if types are correct here.
-@app.exception_handler(StarletteHTTPException)
-async def custom_http_exception_handler(request: Request, exc: HTTPException):
-    return PlainTextResponse(str(exc.detail), status_code=exc.status_code)
-
-
-# Re-use FastAPI exception handlers (useful for logging or debugging)
-# https://fastapi.tiangolo.com/tutorial/handling-errors/#re-use-fastapis-exception-handlers
-@app.exception_handler(StarletteHTTPException)
-async def custom_http_exception_handler2(request: Request, exc: StarletteHTTPException):
-    print(f"OMG! An HTTP error!: {repr(exc)}")
-    return await http_exception_handler(request, exc)
 
 
 @app.exception_handler(RequestValidationError)

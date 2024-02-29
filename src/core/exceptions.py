@@ -3,29 +3,34 @@ from typing import Any
 from fastapi import HTTPException, status
 
 
-class DetailedHTTPException(HTTPException):
+class CoreHTTPException(HTTPException):
     STATUS_CODE = status.HTTP_500_INTERNAL_SERVER_ERROR
     DETAIL = "Internal server error"
 
-    def __init__(self, **kwargs: dict[str, Any]) -> None:
-        super().__init__(status_code=self.STATUS_CODE, detail=self.DETAIL, **kwargs)
+    def __init__(
+        self, detail: str | dict[str, Any] | None = None, **kwargs: dict[str, Any]
+    ) -> None:
+        # If detail is not passed in manually, default to the DETAIL class property
+        d = self.DETAIL if detail is None else detail
+        super().__init__(status_code=self.STATUS_CODE, detail=d, **kwargs)
 
 
-class PermissionDenied(DetailedHTTPException):
+class PermissionDenied(CoreHTTPException):
     STATUS_CODE = status.HTTP_403_FORBIDDEN
     DETAIL = "Permission denied"
 
 
-class NotFound(DetailedHTTPException):
+class NotFound(CoreHTTPException):
     STATUS_CODE = status.HTTP_404_NOT_FOUND
+    DETAIL = "Resource not found"
 
 
-class BadRequest(DetailedHTTPException):
+class BadRequest(CoreHTTPException):
     STATUS_CODE = status.HTTP_400_BAD_REQUEST
     DETAIL = "Bad Request"
 
 
-class NotAuthenticated(DetailedHTTPException):
+class NotAuthenticated(CoreHTTPException):
     STATUS_CODE = status.HTTP_401_UNAUTHORIZED
     DETAIL = "User not authenticated"
 

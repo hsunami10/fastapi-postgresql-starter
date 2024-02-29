@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 
 from pydantic import EmailStr, Field, field_validator
 
@@ -9,6 +10,8 @@ STRONG_PASSWORD_PATTERN = re.compile(r"^(?=.*[\d])(?=.*[!@#$%^&*])[\w!@#$%^&*]{6
 
 def validate_password(password: str) -> str:
     """Validate the password with regex.
+
+    DO NOT IMPORT!
 
     Args:
         password (str): The value of the field "password"
@@ -46,8 +49,8 @@ class AuthUserDB(CoreModel):
     is_admin: bool
 
     # TODO: figure out how to map sqlalchemy datetime to pydantic
-    # created_at: datetime
-    # updated_at: datetime | None = None
+    created_at: datetime
+    updated_at: datetime | None = None
 
 
 class JWTData(CoreModel):
@@ -57,3 +60,7 @@ class JWTData(CoreModel):
 class AccessTokenResponse(CoreModel):
     access_token: str
     token_type: str
+
+
+class UserResponse(CoreModel):
+    email: EmailStr

@@ -29,6 +29,7 @@ class Settings(BaseSettings):
     POSTGRES_DB: str
     SQLALCHEMY_DATABASE_URI: PostgresDsn | None = None
 
+    # TODO: change the field_validator, validator is deprecated in Pydantic v2
     @validator("SQLALCHEMY_DATABASE_URI", pre=True)
     def assemble_db_connection(cls, v: str | None, values: dict[str, Any]) -> Any:
         if isinstance(v, str):

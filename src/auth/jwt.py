@@ -5,15 +5,17 @@ from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 
+from src.auth import service
 from src.auth.exceptions import AuthRequired, InvalidCredentials, InvalidToken
 from src.auth.schemas import AuthUserDB, JWTData
-from src.auth.service import get_user_by_id
 from src.core.config import settings
 from src.core.constants import ApiVersionPrefixes
 
 oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl=f"{ApiVersionPrefixes.API_V1_PREFIX}/login/access-token"
+    tokenUrl=f"{ApiVersionPrefixes.AUTH_API_V1_PREFIX}/login/access-token"
 )
+
+TokenDep = Annotated[str, Depends(oauth2_scheme)]
 
 
 def create_access_token(
@@ -33,9 +35,6 @@ def create_access_token(
     return encoded_jwt
 
 
-TokenDep = Annotated[str, Depends(oauth2_scheme)]
-
-
 def parse_jwt_from_token(token: TokenDep) -> JWTData:
     if not token:
         raise AuthRequired()
@@ -50,19 +49,23 @@ def parse_jwt_from_token(token: TokenDep) -> JWTData:
     return JWTData(**payload)
 
 
-async def get_current_user(token: TokenDep) -> AuthUserDB:
+async def get_current_user(
+    jwt_data: Annotated[JWTData, Depends(parse_jwt_from_token)]
+) -> AuthUserDB:
     """
     Validate token and get current user.
     """
     try:
-        payload = parse_jwt_from_token(token)
-        user_id = payload.sub
+        user_id = jwt_data.sub
         if user_id is None:
             raise InvalidCredentials()
     except JWTError:
         raise InvalidCredentials()
 
-    user = await get_user_by_id(user_id)
+    user = await service.get_user_by_id(user_id)
     if user is None:
         raise InvalidCredentials()
     return user
+
+
+CurrentUser = Annotated[AuthUserDB, Depends(get_current_user)]

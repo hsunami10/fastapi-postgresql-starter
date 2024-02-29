@@ -1,21 +1,25 @@
 from datetime import datetime, timezone
-from typing import Any
+from typing import Annotated, Any
 
 from fastapi.encoders import jsonable_encoder
-from pydantic import BaseModel, ConfigDict, field_serializer, model_validator
+from pydantic import BaseModel, PlainSerializer, model_validator
+
+
+def convert_datetime_to_gmt(dt: datetime) -> str:
+    if not dt.tzinfo:
+        dt = dt.replace(tzinfo=timezone.utc)
+
+    return dt.strftime("%Y-%m-%dT%H:%M:%S%z")
+
+
+# Replaces Pydantic v1 json_encoders
+# https://github.com/pydantic/pydantic/discussions/7199#discussioncomment-7798544
+CoreDateTime = Annotated[
+    datetime, PlainSerializer(func=convert_datetime_to_gmt, return_type=str)
+]
 
 
 class CoreModel(BaseModel):
-    model_config = ConfigDict(populate_by_name=True)
-
-    # dt: datetime
-
-    @field_serializer("dt")
-    def convert_datetime_to_gmt(cls, dt: datetime) -> str:
-        if not dt.tzinfo:
-            dt = dt.replace(tzinfo=timezone.utc)
-
-        return dt.strftime("%Y-%m-%dT%H:%M:%S%z")
 
     @model_validator(mode="before")
     @classmethod
