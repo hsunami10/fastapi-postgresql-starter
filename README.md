@@ -3,7 +3,7 @@
 ## Setup
 
 1. `cp .env.template .env` (do not alter contents of .env.template)
-2. `docker compose up -d --build` (1st run only, or on Dockerfile changes)
+2. `docker compose up -d --build`
 
 ### [TablePlus](https://tableplus.com/)
 
@@ -25,10 +25,15 @@ Connection Fields:
 
 ## Docker
 
+Run `docker compose up -d --build` on these changes:
+- .env file variables (not .py)
+- Dockerfile
+- compose.*.yml
+
 ```sh
 # Workflow:
 
-docker compose up -d # --build (if there are changes in: poetry deps, Dockerfile, compose.*.yml)
+docker compose up -d # --build
 
 # Terminal docker compose services
 docker compose down # -v (to delete persisted volumes/data)

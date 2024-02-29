@@ -50,6 +50,12 @@ async def custom_http_exception_handler2(request: Request, exc: StarletteHTTPExc
     return await http_exception_handler(request, exc)
 
 
+@app.exception_handler(ValueError)
+async def value_error_exception_handler(request: Request, exc: ValueError):
+    print(f"Logging ValueError: {repr(exc)}")
+    return await http_exception_handler(request, exc)
+
+
 # Override Pydantic ValidationError messages example.
 # TODO: Delete this later
 # CUSTOM_ERROR_MESSAGES = {

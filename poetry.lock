@@ -753,26 +753,6 @@ files = [
 ]
 
 [[package]]
-name = "passlib"
-version = "1.7.4"
-description = "comprehensive password hashing framework supporting over 30 schemes"
-optional = false
-python-versions = "*"
-files = [
-    {file = "passlib-1.7.4-py2.py3-none-any.whl", hash = "sha256:aa6bca462b8d8bda89c70b382f0c298a20b5560af6cbfa2dce410c0a2fb669f1"},
-    {file = "passlib-1.7.4.tar.gz", hash = "sha256:defd50f72b65c5402ab2c573830a6978e5f202ad0d984793c8dde2c4152ebe04"},
-]
-
-[package.dependencies]
-bcrypt = {version = ">=3.1.0", optional = true, markers = "extra == \"bcrypt\""}
-
-[package.extras]
-argon2 = ["argon2-cffi (>=18.2.0)"]
-bcrypt = ["bcrypt (>=3.1.0)"]
-build-docs = ["cloud-sptheme (>=1.10.1)", "sphinx (>=1.6)", "sphinxcontrib-fulltoc (>=1.2.0)"]
-totp = ["cryptography"]
-
-[[package]]
 name = "pathspec"
 version = "0.12.1"
 description = "Utility library for gitignore style pattern matching of file paths."
@@ -1307,17 +1287,6 @@ anyio = ">=3.4.0,<5"
 full = ["httpx (>=0.22.0)", "itsdangerous", "jinja2", "python-multipart (>=0.0.7)", "pyyaml"]
 
 [[package]]
-name = "types-passlib"
-version = "1.7.7.20240106"
-description = "Typing stubs for passlib"
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "types-passlib-1.7.7.20240106.tar.gz", hash = "sha256:2231ae83d1dd9e485b7ec6041d81b4f9c66403d1767360e860605a90db48ea27"},
-    {file = "types_passlib-1.7.7.20240106-py3-none-any.whl", hash = "sha256:347aa64d4c2bc239f3765fe38fc79dad3d67f9def7b3ea721daaaaa835a91dad"},
-]
-
-[[package]]
 name = "types-pyasn1"
 version = "0.5.0.20240205"
 description = "Typing stubs for pyasn1"
@@ -1604,4 +1573,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "68b5254116086062a8c900328fa172dfe2c28d51e5bf83f43c205782730b848b"
+content-hash = "80adb28f38fbadbc32e6c1c5b156b1d673df02dc8a2c990068c9c8f966dc4e21"

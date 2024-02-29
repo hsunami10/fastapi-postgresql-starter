@@ -42,15 +42,14 @@ class AuthUserDB(CoreModel):
 
     id: int
     email: EmailStr
-    password: str
-
-    check_valid_password = field_validator("password", mode="after")(validate_password)
-
+    password: bytes
     is_admin: bool
-
-    # TODO: figure out how to map sqlalchemy datetime to pydantic
     created_at: datetime
     updated_at: datetime | None = None
+
+
+class AuthUserResponse(CoreModel):
+    email: EmailStr
 
 
 class JWTData(CoreModel):
@@ -60,7 +59,3 @@ class JWTData(CoreModel):
 class AccessTokenResponse(CoreModel):
     access_token: str
     token_type: str
-
-
-class UserResponse(CoreModel):
-    email: EmailStr

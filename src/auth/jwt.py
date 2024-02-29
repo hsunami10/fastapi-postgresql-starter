@@ -62,7 +62,7 @@ async def get_current_user(
     except JWTError:
         raise InvalidCredentials()
 
-    user = await service.get_user_by_id(user_id)
+    user = await service.get_user_by_id(int(user_id))
     if user is None:
         raise InvalidCredentials()
     return user

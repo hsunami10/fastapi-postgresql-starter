@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 from typing import Annotated, Any
 
 from fastapi.encoders import jsonable_encoder
-from pydantic import BaseModel, PlainSerializer, model_validator
+from pydantic import BaseModel, PlainSerializer
 
 
 def convert_datetime_to_gmt(dt: datetime) -> str:
@@ -14,26 +14,18 @@ def convert_datetime_to_gmt(dt: datetime) -> str:
 
 # Replaces Pydantic v1 json_encoders
 # https://github.com/pydantic/pydantic/discussions/7199#discussioncomment-7798544
-CoreDateTime = Annotated[
+JSONDateTime = Annotated[
     datetime, PlainSerializer(func=convert_datetime_to_gmt, return_type=str)
 ]
 
 
 class CoreModel(BaseModel):
+    def to_dict(self) -> dict[str, Any]:
+        return self.model_dump()
 
-    @model_validator(mode="before")
-    @classmethod
-    def set_null_microseconds(cls, data: dict[str, Any]) -> dict[str, Any]:
-        datetime_fields = {
-            k: v.replace(microsecond=0)
-            for k, v in data.items()
-            if isinstance(v, datetime)
-        }
+    def to_json_string(self) -> str:
+        return self.model_dump_json()
 
-        return {**data, **datetime_fields}
-
-    def serializable_dict(self, **kwargs: dict[str, Any]) -> Any:
-        """Return a dict which contains only serializable fields."""
-        default_dict = self.model_dump()
-
-        return jsonable_encoder(default_dict)
+    def to_json(self) -> Any:
+        """Return a dict which contains only JSON-serializable fields."""
+        return jsonable_encoder(self.model_dump())
