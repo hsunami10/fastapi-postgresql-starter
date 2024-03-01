@@ -12,7 +12,7 @@ from src.core.config import settings
 from src.core.constants import ApiVersionPrefixes
 
 oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl=f"{ApiVersionPrefixes.AUTH_API_V1_PREFIX}/login/access-token"
+    tokenUrl=f"{ApiVersionPrefixes.AUTH_API_V1_PREFIX}/access-token"
 )
 
 TokenDep = Annotated[str, Depends(oauth2_scheme)]

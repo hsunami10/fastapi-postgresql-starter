@@ -1,18 +1,16 @@
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, Request
 from fastapi.exception_handlers import (
     http_exception_handler,
     request_validation_exception_handler,
 )
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse, PlainTextResponse
+from fastapi.responses import JSONResponse
 from pydantic import ValidationError
-from pydantic_core import ErrorDetails
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.middleware.cors import CORSMiddleware
 
 from src.auth.api_v1 import auth_v1_router
 from src.core.config import settings
-from src.core.exceptions import BadRequest
 from src.tutorial import (
     cookie_header_router,
     dependencies_router,
@@ -42,39 +40,17 @@ async def healthcheck() -> dict[str, str]:
     return {"status": "ok"}
 
 
-# Re-use FastAPI exception handlers (useful for logging or debugging)
-# https://fastapi.tiangolo.com/tutorial/handling-errors/#re-use-fastapis-exception-handlers
+# TODO: Fine-tune custom exception handlers
 @app.exception_handler(StarletteHTTPException)
-async def custom_http_exception_handler2(request: Request, exc: StarletteHTTPException):
+async def custom_http_exception_handler(request: Request, exc: StarletteHTTPException):
     print(f"Logging HTTP error: {repr(exc)}")
     return await http_exception_handler(request, exc)
 
 
-@app.exception_handler(ValueError)
-async def value_error_exception_handler(request: Request, exc: ValueError):
-    print(f"Logging ValueError: {repr(exc)}")
-    return await http_exception_handler(request, exc)
-
-
-# Override Pydantic ValidationError messages example.
-# TODO: Delete this later
-# CUSTOM_ERROR_MESSAGES = {
-#     "email": {
-#         "value_error": "The email address is not valid. It must have exactly one @-sign."
-#     },
-#     "password": {"string_too_short": "String should have at least 6 characters"},
-# }
-# @app.exception_handler(ValidationError)
-# def validation_error_exception_handler(request: Request, exc: ValidationError):
-#     custom_messages: list[str] = []
-#     for error in exc.errors():
-#         for loc in error["loc"]:
-#             custom_message = CUSTOM_ERROR_MESSAGES[loc][error["type"]] or error["msg"]
-#             custom_messages.append(custom_message)
-#     return JSONResponse(
-#         status_code=BadRequest.STATUS_CODE,
-#         content={"message": str("\n".join(custom_messages))},
-#     )
+@app.exception_handler(ValidationError)
+async def validation_error_exception_handler(request: Request, exc: ValidationError):
+    print(f"Logging ValidationError: {repr(exc)}")
+    return await request_validation_exception_handler(request, exc)
 
 
 app.include_router(auth_v1_router)

@@ -5,14 +5,13 @@
 
 from typing import Annotated, Any
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 from fastapi.security import OAuth2PasswordRequestForm
 
 from src.auth import jwt, service
 from src.auth.jwt import CurrentUser
 from src.auth.schemas import AccessTokenResponse, AuthUserRequestForm, AuthUserResponse
 from src.core.constants import ApiVersionPrefixes
-from src.core.exceptions import BadRequest
 
 auth_v1_router = APIRouter(
     prefix=ApiVersionPrefixes.AUTH_API_V1_PREFIX,
@@ -28,16 +27,25 @@ Use this generator to test: https://bcrypt-generator.com/
 """
 
 
-@auth_v1_router.post("/login/access-token", response_model=AccessTokenResponse)
+@auth_v1_router.post(
+    "/", status_code=status.HTTP_201_CREATED, response_model=AuthUserResponse
+)
+async def register_user(
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
+) -> Any:
+    auth_data = AuthUserRequestForm(
+        email=form_data.username, password=form_data.password
+    )
+    return await service.create_user(auth_data)
+
+
+@auth_v1_router.post("/access-token", response_model=AccessTokenResponse)
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
-) -> AccessTokenResponse:
-    try:
-        auth_data = AuthUserRequestForm(
-            email=form_data.username, password=form_data.password
-        )
-    except ValueError as exc:
-        raise BadRequest(detail=str(exc))
+) -> Any:
+    auth_data = AuthUserRequestForm(
+        email=form_data.username, password=form_data.password
+    )
 
     user = await service.authenticate_user(auth_data)
     # TODO: add functionality to create refresh tokens
@@ -46,6 +54,6 @@ async def login_for_access_token(
     )
 
 
-@auth_v1_router.get("/users/me", response_model=AuthUserResponse)
+@auth_v1_router.get("/me", response_model=AuthUserResponse)
 async def read_user_me(current_user: CurrentUser) -> Any:
     return current_user

@@ -4,6 +4,9 @@
 
 1. `cp .env.template .env` (do not alter contents of .env.template)
 2. `docker compose up -d --build`
+3. `docker compose exec backend-api migrate`
+4. install poetry and run `poetry install` to auto-setup the virtualenv (so VSCode can work)
+5. make sure the python interpreter in VSCode is set to the poetry venv
 
 ### [TablePlus](https://tableplus.com/)
 
@@ -26,9 +29,9 @@ Connection Fields:
 ## Docker
 
 Run `docker compose up -d --build` on these changes:
-- .env file variables (not .py)
-- Dockerfile
-- compose.*.yml
+- `.env` file variables
+- `Dockerfile`
+- `compose.*.yml`
 
 ```sh
 # Workflow:
@@ -76,15 +79,15 @@ docker compose exec backend-api downgrade -1
 
 - https://www.pythoncheatsheet.org/blog/python-projects-with-poetry-and-vscode-part-1
 
-| Command                                    | Description                                            |
-| ------------------------------------------ | ------------------------------------------------------ |
-| `poetry new [package-name]`                | Start a new Python Project.                            |
-| `poetry init`                              | Create a *pyproject.toml* file interactively.          |
-| `poetry install`                           | Install the packages inside the *pyproject.toml* file. |
-| `poetry add [package-name]`                | Add a package to a Virtual Environment.                |
-| `poetry add --group dev [package-name]`    | Add a dev package to a Virtual Environment.            |
-| `poetry remove [package-name]`             | Remove a package from a Virtual Environment.           |
-| `poetry remove --group dev [package-name]` | Remove a dev package from a Virtual Environment.       |
+| Command                                    | Description                                                  |
+| ------------------------------------------ | ------------------------------------------------------------ |
+| `poetry new [package-name]`                | Start a new Python Project.                                  |
+| `poetry init`                              | Create a *pyproject.toml* file interactively.                |
+| `poetry install`                           | Install the packages inside the *pyproject.toml* file and create a virtual environment. |
+| `poetry add [package-name]`                | Add a package to a Virtual Environment.                      |
+| `poetry add --group dev [package-name]`    | Add a dev package to a Virtual Environment.                  |
+| `poetry remove [package-name]`             | Remove a package from a Virtual Environment.                 |
+| `poetry remove --group dev [package-name]` | Remove a dev package from a Virtual Environment.             |
 
 #### Sample Apps
 
@@ -122,13 +125,27 @@ UTCDateTime = Annotated[
 
 ### FastAPI
 
-- [add scripts for alembic migrations](https://github.com/zhanymkanov/fastapi_production_template/tree/main/scripts)
+- [~~add scripts for alembic migrations~~](https://github.com/zhanymkanov/fastapi_production_template/tree/main/scripts)
+
+- ~~add sign up route~~
+
+- implement refresh tokens
+
+- learn about [background tasks](https://fastapi.tiangolo.com/tutorial/background-tasks/) and use one for refresh tokens
+
+- organize `README.md`
+
+- add get user endpoint (get other user)
+
 - [use ruff](https://docs.astral.sh/ruff/) instead of isort, black, and flake8
+
 - add pre-commit hooks (type-checking, linting, formatting)
+
+  
 
 ### Docker
 
-- scripts need `chmod +x` (executable) permissions on host computer to work... which doesn't require permissions from the container's user. is that secure?
+- scripts need `chmod +x` (executable) permissions on host computer to work... which doesn't require permissions from the container's user. is that fine?
 - split `compose.yml` file into `compose.yml` and `compose.override.yml` + clean up
   - [working with multiple compose files](https://docs.docker.com/compose/multiple-compose-files/)
   - [compose in prod](https://docs.docker.com/compose/production/)

@@ -21,4 +21,4 @@ class Environment(str, Enum):
 
 
 class ApiVersionPrefixes:
-    AUTH_API_V1_PREFIX: str = "/api/v1/auth"
+    AUTH_API_V1_PREFIX: str = "/api/v1/users"

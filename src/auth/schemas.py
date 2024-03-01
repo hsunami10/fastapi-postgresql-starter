@@ -52,7 +52,7 @@ class AuthUserDB(CoreModel):
 
 
 class AuthUserResponse(CoreModel):
-    email: EmailStr
+    id: int
 
 
 class JWTData(CoreModel):

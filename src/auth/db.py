@@ -12,6 +12,7 @@ from sqlalchemy import (
     Table,
     Update,
     func,
+    insert,
     select,
 )
 from sqlalchemy.dialects.postgresql import UUID
@@ -65,4 +66,15 @@ async def find_one_by_email(email: str) -> AuthUserDB | None:
     if email is None:
         return None
     query = select(auth_user_table).where(auth_user_table.c.email == email)
+    return await fetch_one(query)
+
+
+async def create_with_email_pwd(email: str, password: bytes) -> AuthUserDB | None:
+    if email is None or password is None:
+        return None
+    query = (
+        insert(auth_user_table)
+        .values(email=email, password=password)
+        .returning(auth_user_table)
+    )
     return await fetch_one(query)

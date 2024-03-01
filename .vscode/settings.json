@@ -8,5 +8,4 @@
   },
   "python.analysis.typeCheckingMode": "off", // disable pylance type-checking, mypy is used instead
   "isort.args": ["--profile", "black"],
-  "editor.fontSize": 14,
 }
