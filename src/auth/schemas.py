@@ -5,7 +5,10 @@ from pydantic import EmailStr, Field, field_validator
 
 from src.core.schemas import CoreModel
 
-STRONG_PASSWORD_PATTERN = re.compile(r"^(?=.*[\d])(?=.*[!@#$%^&*])[\w!@#$%^&*]{6,128}$")
+# https://uibakery.io/regex-library/password-regex-python
+STRONG_PASSWORD_PATTERN = re.compile(
+    r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,128}$"
+)
 
 
 def validate_password(password: str) -> str:
@@ -21,8 +24,8 @@ def validate_password(password: str) -> str:
             "Password must contain at least "
             "one lower character, "
             "one upper character, "
-            "digit or "
-            "special symbol"
+            "one digit, "
+            "one special symbol"
         )
 
     return password

@@ -23,19 +23,8 @@ auth_v1_router = APIRouter(
 """
 Testing
 
-email in db: example@mail.com
-password in db: $2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW
-
-SQL query:
-
-insert into auth_user (email, password, is_admin) values (
-'example@mail.com',
-'$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW',
-true
-)
-
-password to login in OpenAPI docs: secret
-(uncomment AuthUserRequestForm b/c it won't pass the password check)
+TODO: Remove this docstring
+Use this generator to test: https://bcrypt-generator.com/
 """
 
 

@@ -65,6 +65,8 @@ docker compose exec backend-api downgrade -1
 
 ## Resources
 
+- [SQLAlchemy Core Syntax](https://www.tutorialspoint.com/sqlalchemy/sqlalchemy_core_selecting_rows.htm)
+
 ### Project Templates
 - https://github.com/zhanymkanov/fastapi_production_template
 - https://medium.com/@tclaitken/setting-up-a-fastapi-app-with-async-sqlalchemy-2-0-pydantic-v2-e6c540be4308
@@ -84,8 +86,6 @@ docker compose exec backend-api downgrade -1
 | `poetry remove [package-name]`             | Remove a package from a Virtual Environment.           |
 | `poetry remove --group dev [package-name]` | Remove a dev package from a Virtual Environment.       |
 
-### Docker
-
 #### Sample Apps
 
 - https://docs.docker.com/compose/samples-for-compose/
@@ -97,6 +97,26 @@ docker compose exec backend-api downgrade -1
 - https://github.com/orgs/python-poetry/discussions/1879
 - https://stackoverflow.com/questions/53835198/integrating-python-poetry-with-docker
 - https://github.com/svx/poetry-fastapi-docker/blob/main/Dockerfile
+
+### Extra Code (for future reference)
+
+**Converting Python datetime object to JSON date string (UTC)**
+See [this link](https://stackoverflow.com/questions/10805589/convert-json-date-string-to-python-datetime) for converting the other way around
+
+```python
+def convert_datetime_to_utc(dt: datetime) -> str:
+    if not dt.tzinfo:
+        dt = dt.replace(tzinfo=timezone.utc)
+
+    return dt.strftime("%Y-%m-%dT%H:%M:%S%z")
+
+
+# Replaces Pydantic v1 json_encoders
+# https://github.com/pydantic/pydantic/discussions/7199#discussioncomment-7798544
+UTCDateTime = Annotated[
+    datetime, PlainSerializer(func=convert_datetime_to_utc, return_type=str)
+]
+```
 
 ## TODOs
 

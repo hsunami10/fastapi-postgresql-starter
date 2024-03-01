@@ -54,14 +54,14 @@ async def fetch_one(query: Select | Insert | Update) -> AuthUserDB | None:
         return AuthUserDB(**first_row._asdict()) if first_row else None
 
 
-async def fetch_one_by_id(user_id: int) -> AuthUserDB | None:
+async def find_one_by_id(user_id: int) -> AuthUserDB | None:
     if user_id is None:
         return None
     query = select(auth_user_table).where(auth_user_table.c.id == user_id)
     return await fetch_one(query)
 
 
-async def fetch_one_by_email(email: str) -> AuthUserDB | None:
+async def find_one_by_email(email: str) -> AuthUserDB | None:
     if email is None:
         return None
     query = select(auth_user_table).where(auth_user_table.c.email == email)

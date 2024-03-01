@@ -5,14 +5,14 @@ from src.core.exceptions import NotFound
 
 
 async def get_user_by_id(user_id: int) -> AuthUserDB:
-    user = await db.fetch_one_by_id(user_id)
+    user = await db.find_one_by_id(user_id)
     if not user:
         raise NotFound(detail="User not found")
     return user
 
 
 async def authenticate_user(auth_data: AuthUserRequestForm) -> AuthUserDB:
-    user = await db.fetch_one_by_email(auth_data.email)
+    user = await db.find_one_by_email(auth_data.email)
     if not user:
         raise InvalidCredentials()
 
