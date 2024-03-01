@@ -36,7 +36,11 @@ async def register_user(
     auth_data = AuthUserRequestForm(
         email=form_data.username, password=form_data.password
     )
-    return await service.create_user(auth_data)
+    user = await service.create_user(auth_data)
+    # TODO: add functionality to create refresh tokens
+    return AccessTokenResponse(
+        access_token=jwt.create_access_token(user), token_type="bearer"
+    )
 
 
 @auth_v1_router.post("/access-token", response_model=AccessTokenResponse)
