@@ -28,22 +28,19 @@ Use this generator to test: https://bcrypt-generator.com/
 
 
 @auth_v1_router.post(
-    "/", status_code=status.HTTP_201_CREATED, response_model=AuthUserResponse
+    "/", status_code=status.HTTP_201_CREATED, response_model=AccessTokenResponse
 )
-async def register_user(
+async def create_user(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
 ) -> Any:
     auth_data = AuthUserRequestForm(
         email=form_data.username, password=form_data.password
     )
-    user = await service.create_user(auth_data)
-    # TODO: add functionality to create refresh tokens
-    return AccessTokenResponse(
-        access_token=jwt.create_access_token(user), token_type="bearer"
-    )
+    # TODO: add functionality for email verification
+    return await service.create_user(auth_data)
 
 
-@auth_v1_router.post("/access-token", response_model=AccessTokenResponse)
+@auth_v1_router.post("/tokens", response_model=AccessTokenResponse)
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
 ) -> Any:
