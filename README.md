@@ -3,9 +3,9 @@
 ## Setup
 
 1. `cp .env.template .env` (do not alter contents of .env.template)
-2. `docker compose up -d --build`
+2. `docker compose up -d --build` (first run only)
 3. `docker compose exec backend-api migrate`
-4. install poetry and run `poetry install` to auto-setup the virtualenv (so VSCode can work)
+4. install python `3.12` and poetry, and run `poetry install` to auto-setup the virtualenv (so VSCode can work)
 5. make sure the python interpreter in VSCode is set to the poetry venv
 
 ### [TablePlus](https://tableplus.com/)
@@ -125,17 +125,19 @@ UTCDateTime = Annotated[
 
 ### FastAPI
 
-- [~~add scripts for alembic migrations~~](https://github.com/zhanymkanov/fastapi_production_template/tree/main/scripts)
-
-- ~~add sign up route~~
-
-- implement refresh tokens
-
-- learn about [background tasks](https://fastapi.tiangolo.com/tutorial/background-tasks/) and use one for refresh tokens
-
-- organize `README.md`
+#### Features
 
 - add get user endpoint (get other user)
+- Set up testing env + write tests
+- Set up email confirmation on sign up
+- Add reset password functionality
+- implement refresh tokens
+- learn about [background tasks](https://fastapi.tiangolo.com/tutorial/background-tasks/) and use one for refresh tokens
+- Install + setup redis cache
+
+#### Refactoring
+
+- organize `README.md`
 
 - [use ruff](https://docs.astral.sh/ruff/) instead of isort, black, and flake8
 
