@@ -1,7 +1,7 @@
 """create auth user table
 
 Revision ID: 094ab13e6cd0
-Revises: 
+Revises:
 Create Date: 2024-02-26 20:27:43.790055+00:00
 
 """

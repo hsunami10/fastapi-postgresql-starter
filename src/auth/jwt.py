@@ -50,7 +50,7 @@ def parse_jwt_from_token(token: TokenDep) -> JWTData:
 
 
 async def get_current_user(
-    jwt_data: Annotated[JWTData, Depends(parse_jwt_from_token)]
+    jwt_data: Annotated[JWTData, Depends(parse_jwt_from_token)],
 ) -> AuthUserDB:
     """
     Validate token and get current user.

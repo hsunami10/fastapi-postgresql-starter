@@ -190,9 +190,9 @@ UTCDateTime = Annotated[
 
 - organize `README.md`
 
-- [use ruff](https://docs.astral.sh/ruff/) instead of isort, black, and flake8
+- ~~[use ruff](https://docs.astral.sh/ruff/) instead of isort, black, and flake8~~
 
-- add pre-commit hooks (type-checking, linting, formatting)
+- add [pre-commit hooks](https://github.com/astral-sh/ruff-pre-commit?tab=readme-ov-file) (type-checking, linting, formatting)
 
   
 

@@ -31,7 +31,7 @@ Use this generator to test: https://bcrypt-generator.com/
     "/", status_code=status.HTTP_201_CREATED, response_model=AccessTokenResponse
 )
 async def create_user(
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 ) -> Any:
     auth_data = AuthUserRequestForm(
         email=form_data.username, password=form_data.password
@@ -42,7 +42,7 @@ async def create_user(
 
 @auth_v1_router.post("/tokens", response_model=AccessTokenResponse)
 async def login_for_access_token(
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 ) -> Any:
     auth_data = AuthUserRequestForm(
         email=form_data.username, password=form_data.password

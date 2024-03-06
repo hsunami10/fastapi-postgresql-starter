@@ -50,7 +50,7 @@ async def read_items(q: Annotated[str, Query(min_length=3)]) -> dict[str, Any]:
 # Allow multiple query params
 @router.get("/multiple_params/")
 async def read_items2(
-    q: Annotated[list[str], Query()] = ["foo", "bar"]
+    q: Annotated[list[str], Query()] = ["foo", "bar"],
 ) -> dict[str, list[str]]:
     query_items = {"q": q}
     return query_items
