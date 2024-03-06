@@ -5,8 +5,9 @@
 1. `cp .env.template .env` (do not alter contents of .env.template)
 2. `docker compose up -d --build` (first run only)
 3. `docker compose exec backend-api migrate`
-4. install python `3.12` and poetry, and run `poetry install` to auto-setup the virtualenv (so VSCode can work)
-5. make sure the python interpreter in VSCode is set to the poetry venv
+4. (for VSCode)
+   - install python `3.12` and poetry, and run `poetry install` to auto-setup the virtualenv
+   - make sure the python interpreter in VSCode is set to the poetry venv
 
 ### [TablePlus](https://tableplus.com/)
 
@@ -29,6 +30,7 @@ Connection Fields:
 ## Docker
 
 Run `docker compose up -d --build` on these changes:
+
 - `.env` file variables
 - `Dockerfile`
 - `compose.*.yml`
@@ -36,7 +38,12 @@ Run `docker compose up -d --build` on these changes:
 ```sh
 # Workflow:
 
+# Start docker services (build is optional)
 docker compose up -d # --build
+
+# Alternative way to start
+# docker compose build
+docker compose up -d
 
 # Terminal docker compose services
 docker compose down # -v (to delete persisted volumes/data)
@@ -52,6 +59,50 @@ Services:
 
 - `backend-api` - FastAPI web server
 - `pg-db` - PostgreSQL database server
+
+### iTermocil
+
+Used to auto-open terminals in iTerm for quicker development. **Only run these commands after successfully running docker compose.**
+
+Install [iTermocil](https://github.com/TomAnthony/itermocil) by running these commands in terminal:
+
+```sh
+brew install TomAnthony/brews/itermocil
+mkdir ~/.itermocil
+cp itermocil/dev.yml ~/.itermocil/dev.yml # inside project root dir
+itermocil --edit dev
+```
+
+Run `pwd` in the project's root directory, and replace all `<proj-root-path>` with the output.
+
+Then run:
+
+```sh
+itermocil dev
+```
+
+#### Troubleshooting
+
+If you encounter the below error:
+
+```
+Error: Invalid formula: /usr/local/Homebrew/Library/Taps/tomanthony/homebrew-brews/Formula/squid.rb
+squid: Calling `sha256 "digest" => :tag` in a bottle block is disabled! Use `brew style --fix` on the formula to update the style or use `sha256 tag: "digest"` instead.
+Please report this issue to the tomanthony/brews tap (not Homebrew/brew or Homebrew/core), or even better, submit a PR to fix it:
+  /usr/local/Homebrew/Library/Taps/tomanthony/homebrew-brews/Formula/squid.rb:9
+
+Error: Cannot tap tomanthony/brews: invalid syntax in tap!
+```
+
+[Try building the formula from sources:](https://github.com/TomAnthony/itermocil/issues/117#issuecomment-874879053)
+
+```
+git clone git@github.com:TomAnthony/homebrew-brews.git
+cd homebrew-brews/
+brew style --fix Formula
+brew install --build-from-source Formula/itermocil.rb
+mkdir ~/.itermocil # Continue with steps from above
+```
 
 ## [Migrations (Alembic)](https://medium.com/@johnidouglasmarangon/using-migrations-in-python-sqlalchemy-with-alembic-docker-solution-bd79b219d6a)
 

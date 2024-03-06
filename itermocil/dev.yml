@@ -1,0 +1,26 @@
+# Assuming project root = frontend/, backend/, compose.yml
+# This only works if docker compose is running
+# TODO: test
+windows:
+  - name: GitHub Root
+    root: <proj-root-path>
+    panes:
+      - ''
+  - name: Frontend Dev
+    root: <proj-root-path>
+    layout: main-vertical
+    panes:
+      - commands:
+          - cd <proj-root-path>/frontend
+        focus: true
+      - docker compose attach frontend-client
+      - docker compose exec frontend-client npx tsc --watch
+  - name: Backend Dev
+    root: <proj-root-path>
+    layout: main-vertical
+    panes:
+      - commands:
+          - cd <proj-root-path>/backend
+        focus: true
+      - docker compose attach backend-api
+      - docker compose attach pg-db
