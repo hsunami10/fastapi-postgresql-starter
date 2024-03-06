@@ -21,10 +21,10 @@ Connection Fields:
 ### VSCode Extensions
 
 - [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python) → should automatically install [Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance), [Python Debugger](https://marketplace.visualstudio.com/items?itemName=ms-python.debugpy)
-- [Black Formatter](https://marketplace.visualstudio.com/items?itemName=ms-python.black-formatter) (format Python files)
-- [Flake8](https://marketplace.visualstudio.com/items?itemName=ms-python.flake8) (linting)
+
+- [Ruff](https://marketplace.visualstudio.com/items?itemName=charliermarsh.ruff) (linter, code formatter)
+
 - [Mypy Type Checker](https://marketplace.visualstudio.com/items?itemName=ms-python.mypy-type-checker)
-- [isort](https://marketplace.visualstudio.com/items?itemName=ms-python.isort) (import sorting)
 - [Even Better TOML](https://marketplace.visualstudio.com/items?itemName=tamasfe.even-better-toml)
 
 ## Docker
@@ -193,6 +193,8 @@ UTCDateTime = Annotated[
 - ~~[use ruff](https://docs.astral.sh/ruff/) instead of isort, black, and flake8~~
 
 - add [pre-commit hooks](https://github.com/astral-sh/ruff-pre-commit?tab=readme-ov-file) (type-checking, linting, formatting)
+
+- add [generic types](https://docs.python.org/3/library/typing.html#user-defined-generic-types) for reusable db methods
 
   
 
