@@ -6,7 +6,7 @@ ARG INSTALL_DEV_DEPS
 
 # Install required packages and clean up disc space
 RUN apt-get -y update && \
-    apt-get -y install curl vim git && \
+    apt-get -y install curl && \
     apt clean && \
     rm -rf /var/cache/apt/* && \
     rm -rf /var/lib/apt/lists/*

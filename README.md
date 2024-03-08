@@ -60,11 +60,11 @@ Services:
 - `backend-api` - FastAPI web server
 - `pg-db` - PostgreSQL database server
 
-### iTermocil
+## iTermocil
 
 Used to auto-open terminals in iTerm for quicker development. **Only run these commands after successfully running docker compose.**
 
-Install [iTermocil](https://github.com/TomAnthony/itermocil) by running these commands in terminal:
+1. Install [iTermocil](https://github.com/TomAnthony/itermocil) by running these commands in terminal:
 
 ```sh
 brew install TomAnthony/brews/itermocil
@@ -73,15 +73,13 @@ cp itermocil/dev.yml ~/.itermocil/dev.yml # inside project root dir
 itermocil --edit dev
 ```
 
-Run `pwd` in the project's root directory, and replace all `<proj-root-path>` with the output.
+2. Replace all `<proj-root-path>` with your project's path (see path to current dir with `pwd`)
 
-Then run:
+3. Run `itermocil dev` -- which should successfully attach to running docker containers!
 
-```sh
-itermocil dev
-```
+**Note:** there won't be any output because `docker compose attach` only shows ongoing output.
 
-#### Troubleshooting
+### Troubleshooting
 
 If you encounter the below error:
 
