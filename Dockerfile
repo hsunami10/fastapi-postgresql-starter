@@ -5,8 +5,8 @@ FROM python:3.12-slim
 ARG INSTALL_DEV_DEPS
 
 # Install required packages and clean up disc space
-RUN apt-get update && \
-    apt-get install -y curl emacs && \
+RUN apt-get -y update && \
+    apt-get -y install curl vim git && \
     apt clean && \
     rm -rf /var/cache/apt/* && \
     rm -rf /var/lib/apt/lists/*
@@ -35,10 +35,10 @@ RUN poetry install $(test "$INSTALL_DEV_DEPS" == 'false' && echo "--only main") 
 COPY . $APP_DIR
 ENV PATH "$PATH:$APP_DIR/scripts"
 
-RUN useradd -m -d ${APP_DIR} -s /bin/bash dev && \
-    chown -R dev:dev ${APP_DIR}/*
+# RUN useradd -m -d ${APP_DIR} -s /bin/bash dev && \
+#     chown -R dev:dev ${APP_DIR}/*
 
-USER dev
+# USER dev
 
 EXPOSE 8000
 CMD ["uvicorn", "--reload", "--host=0.0.0.0", "--port=8000", "src.main:app"]

@@ -1,4 +1,8 @@
+.config
+.dotnet
+.ruff_cache
 .bash_history
+.vscode-server
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
