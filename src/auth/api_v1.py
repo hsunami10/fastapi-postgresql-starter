@@ -28,7 +28,7 @@ Use this generator to test: https://bcrypt-generator.com/
 
 
 @auth_v1_router.post(
-    "/", status_code=status.HTTP_201_CREATED, response_model=AccessTokenResponse
+    "/", status_code=status.HTTP_201_CREATED, response_model=AuthUserResponse
 )
 async def create_user(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],

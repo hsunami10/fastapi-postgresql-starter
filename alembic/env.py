@@ -33,12 +33,13 @@ target_metadata = metadata
 
 
 user = os.getenv("POSTGRES_USER", "postgres")
-password = os.getenv("POSTGRES_PASSWORD", "")
+password = os.getenv("POSTGRES_PASSWORD", "postgres")
 host = os.getenv("POSTGRES_HOST", "pg-db")
+port = os.getenv("POSTGRES_PORT", 5432)
 db_name = os.getenv("POSTGRES_DB", "app")
 
 # Sync driver
-DATABASE_URL = f"postgresql+psycopg://{user}:{password}@{host}/{db_name}"
+DATABASE_URL = f"postgresql+psycopg://{user}:{password}@{host}:{port}/{db_name}"
 
 config.set_main_option("sqlalchemy.url", DATABASE_URL)
 
