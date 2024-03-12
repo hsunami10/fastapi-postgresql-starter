@@ -1,6 +1,8 @@
 from enum import Enum
+from typing import Literal, final
 
 
+@final
 class Environment(str, Enum):
     LOCAL = "LOCAL"
     TESTING = "TESTING"
@@ -20,5 +22,6 @@ class Environment(str, Enum):
         return self in (self.STAGING, self.PRODUCTION)
 
 
+@final
 class ApiVersionPrefixes:
-    AUTH_API_V1_PREFIX: str = "/api/v1/users"
+    AUTH_API_V1_PREFIX: Literal["/api/v1/users"] = "/api/v1/users"

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, status
 from fastapi.exception_handlers import (
     http_exception_handler,
     request_validation_exception_handler,
@@ -35,7 +35,7 @@ app.add_middleware(
 )
 
 
-@app.get("/healthcheck", include_in_schema=False)
+@app.get("/healthcheck", include_in_schema=False, status_code=status.HTTP_200_OK)
 async def healthcheck() -> dict[str, str]:
     return {"status": "ok"}
 
