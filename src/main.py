@@ -1,3 +1,6 @@
+import os
+
+import debugpy
 from fastapi import FastAPI, Request, status
 from fastapi.exception_handlers import (
     http_exception_handler,
@@ -11,6 +14,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from src.auth.api_v1 import auth_v1_router
 from src.core.config import settings
+from src.core.constants import Environment
 from src.tutorial import (
     cookie_header_router,
     dependencies_router,
@@ -22,6 +26,11 @@ from src.tutorial import (
     status_codes_router,
     validations_router,
 )
+
+if os.getenv("ENVIRONMENT") == Environment.TESTING:
+    debugpy.listen(("0.0.0.0", 5555))
+    print("Waiting for VSCode to attach...")
+    debugpy.wait_for_client()
 
 app = FastAPI(title=settings.PROJECT_NAME)
 

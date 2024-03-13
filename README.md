@@ -30,7 +30,7 @@ Connection Fields:
 - [DotENV](https://marketplace.visualstudio.com/items?itemName=mikestead.dotenv)
 - [Path Intellisense](https://marketplace.visualstudio.com/items?itemName=christian-kohler.path-intellisense)
 
-### Command Shortcuts
+### Docker Command Shortcuts
 
 Run the command below to install `docker compose` command shortcuts:
 
@@ -44,6 +44,11 @@ alias dcu="dc up"
 alias dcd="dc down"
 alias dce="dc exec"
 alias dcps="dc ps"
+
+# Docker network aliases
+alias dn="docker network"
+alias dni="dn inspect"
+alias dnls="dn ls"
 EOF
 ```
 
@@ -123,7 +128,35 @@ brew install --build-from-source Formula/itermocil.rb
 mkdir ~/.itermocil # Continue with steps from above
 ```
 
-## [Migrations (Alembic)](https://medium.com/@johnidouglasmarangon/using-migrations-in-python-sqlalchemy-with-alembic-docker-solution-bd79b219d6a)
+## Debugging
+
+To run tests without breakpoints, run this command:
+
+```sh
+# Run tests
+docker compose exec backend-api pytest # [options] <path-to-test-file>
+
+# [options]
+# -rP - print all stdout at the end
+# -s - print stdout in order
+```
+
+To run tests **with breakpoints** in VSCode, you need some extra steps:
+
+1. set a breakpoint → `import debugpy` and add `debugpy.breakpoint()` to your desired location
+2. run the above command
+3. go to VSCode's "Run and Debug" panel → select the `Python Debugger: Attach to Docker` option from the dropdown
+4. click "Play"
+
+VSCode should now stop execution at the breakpoint!
+
+### References
+
+- https://code.visualstudio.com/docs/python/debugging#_remote-script-debugging-with-ssh:~:text=%7D%0A%20%20%5D%0A%7D-,Starting%20debugging,-Now%20that%20an
+- https://www.python-engineer.com/posts/debug-python-docker/
+- https://stackoverflow.com/questions/64013251/debugging-python-in-docker-container-using-debugpy-and-vs-code-results-in-timeou
+
+## [Migrations](https://medium.com/@johnidouglasmarangon/using-migrations-in-python-sqlalchemy-with-alembic-docker-solution-bd79b219d6a)
 
 ```sh
 # Make a new migration
@@ -134,6 +167,9 @@ docker compose exec backend-api migrate
 
 # Downgrade by x (ex. 1) migration
 docker compose exec backend-api downgrade -1
+
+# Remove all migrations
+docker compose exec backend-api downgrade base
 ```
 
 ## Resources
