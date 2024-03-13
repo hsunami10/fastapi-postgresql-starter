@@ -41,11 +41,7 @@ class Settings(BaseSettings):
             values.get("ENVIRONMENT") == Environment.DEVELOPMENT
             or values.get("ENVIRONMENT") == Environment.TESTING
         ) and values.get("DEV_ENV") == DevEnv.LOCAL:
-            postgres_host = "localhost"
-
-        print(values.get("ENVIRONMENT"))
-        print(values.get("DEV_ENV"))
-        print(postgres_host)
+            postgres_host = "127.0.0.1"
         return PostgresDsn.build(
             scheme="postgresql+asyncpg",  # async driver
             username=values.get("POSTGRES_USER"),
