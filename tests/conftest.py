@@ -29,7 +29,7 @@ def run_migrations() -> Generator[None, None, None]:
 @pytest_asyncio.fixture
 async def async_client() -> AsyncGenerator[AsyncClient, None]:
     host, port = os.getenv("SITE_DOMAIN"), "8080"
-    transport = ASGITransport(app=app, raise_app_exceptions=False)  # type: ignore[arg-type]
+    transport = ASGITransport(app=app)  # type: ignore[arg-type]
 
     async with AsyncClient(
         transport=transport, base_url=f"http://{host}:{port}"

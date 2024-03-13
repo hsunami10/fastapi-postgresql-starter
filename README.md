@@ -29,6 +29,23 @@ Connection Fields:
 - [DotENV](https://marketplace.visualstudio.com/items?itemName=mikestead.dotenv)
 - [Path Intellisense](https://marketplace.visualstudio.com/items?itemName=christian-kohler.path-intellisense)
 
+### Command Shortcuts
+
+Run the command below to install `docker compose` command shortcuts:
+
+```bash
+cat <<EOF >> ~/.bash_profile && source ~/.bash_profile # replace ~/.bash_profile with your preferred shell (I use /bin/bash in this case)
+
+# Docker compose aliases
+alias dc="docker compose"
+alias dca="dc attach"
+alias dcu="dc up"
+alias dcd="dc down"
+alias dce="dc exec"
+alias dcps="dc ps"
+EOF
+```
+
 ## Docker
 
 Run `docker compose up -d --build` on these changes:

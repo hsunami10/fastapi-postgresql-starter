@@ -12,12 +12,15 @@ async def get_user_by_id(user_id: int) -> AuthUserDB:
 
 
 async def create_user(auth_data: AuthUserRequestForm) -> AuthUserDB:
-    if await db.find_one_by_email(auth_data.email):
-        raise EmailTaken()
-
-    return await db.create_with_email_pwd(
+    # if await db.find_one_by_email(auth_data.email):
+    #     raise EmailTaken()
+    user = await db.create_with_email_pwd(
         auth_data.email, pwd_utils.hash_password(auth_data.password)
     )
+    if not user:
+        raise EmailTaken()
+
+    return user
 
 
 async def authenticate_user(auth_data: AuthUserRequestForm) -> AuthUserDB:
