@@ -35,13 +35,13 @@ class Settings(BaseSettings):
     @validator("SQLALCHEMY_DATABASE_URI", pre=True)
     def assemble_db_connection(cls, v: str | None, values: dict[str, Any]) -> Any:
         if isinstance(v, str):
-            return v
+            return
         postgres_host = values.get("POSTGRES_HOST")
         if (
             values.get("ENVIRONMENT") == Environment.DEVELOPMENT
             or values.get("ENVIRONMENT") == Environment.TESTING
         ) and values.get("DEV_ENV") == DevEnv.LOCAL:
-            postgres_host = "127.0.0.1"
+            postgres_host = "localhost"
         return PostgresDsn.build(
             scheme="postgresql+asyncpg",  # async driver
             username=values.get("POSTGRES_USER"),

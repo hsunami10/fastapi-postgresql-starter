@@ -1,10 +1,14 @@
 import os
 from logging.config import fileConfig
 
+from dotenv import load_dotenv
 from sqlalchemy import engine_from_config, pool
 
 from alembic import context
+from src.core.constants import DevEnv, Environment
 from src.core.database import metadata
+
+load_dotenv()
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -32,11 +36,17 @@ target_metadata = metadata
 # config.compare_server_default = True
 
 
-user = os.getenv("POSTGRES_USER", "postgres")
-password = os.getenv("POSTGRES_PASSWORD", "postgres")
-host = os.getenv("POSTGRES_HOST", "pg-db")
-port = os.getenv("POSTGRES_PORT", 5432)
-db_name = os.getenv("POSTGRES_DB", "app")
+user = os.getenv("POSTGRES_USER")
+password = os.getenv("POSTGRES_PASSWORD")
+host = os.getenv("POSTGRES_HOST")
+port = os.getenv("POSTGRES_PORT")
+db_name = os.getenv("POSTGRES_DB")
+
+if (
+    os.getenv("ENVIRONMENT") == Environment.DEVELOPMENT
+    or os.getenv("ENVIRONMENT") == Environment.TESTING
+) and os.getenv("DEV_ENV") == DevEnv.LOCAL:
+    host = "localhost"
 
 # Sync driver
 DATABASE_URL = f"postgresql+psycopg://{user}:{password}@{host}:{port}/{db_name}"
