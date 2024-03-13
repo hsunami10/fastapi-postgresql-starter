@@ -5,7 +5,7 @@ windows:
   - name: GitHub Root
     root: <proj-root-path>
     panes:
-      - ''
+      - echo "Entering Poetry virtual environment..." && source "$(poetry env info -p)/bin/activate"
   # - name: Frontend Dev
   #   root: <proj-root-path>
   #   layout: even-horizontal

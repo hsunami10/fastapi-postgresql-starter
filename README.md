@@ -2,10 +2,11 @@
 
 ## Setup
 
-1. `cp .env.template .env` (do not alter contents of .env.template)
-2. `docker compose up -d --build` (first run only)
-3. `docker compose exec backend-api migrate`
-4. (for VSCode)
+1. Run `poetry install`
+2. `cp .env.template .env` (do not alter contents of .env.template)
+3. `docker compose up -d --build` (first run only)
+4. `docker compose exec backend-api migrate`
+5. (for VSCode)
    - install python `3.12` and poetry, and run `poetry install` to auto-setup the virtualenv
    - make sure the python interpreter in VSCode is set to the poetry venv
 
@@ -88,8 +89,9 @@ Used to auto-open terminals in iTerm for quicker development. **Only run these c
 ```sh
 brew install TomAnthony/brews/itermocil
 mkdir ~/.itermocil
-cp itermocil/dev.yml ~/.itermocil/dev.yml # inside project root dir
-itermocil --edit dev
+cd <proj-root-path> # replace this with your project directory
+cp itermocil/dev.yml ~/.itermocil/dev.yml
+code ~/.itermocil/dev.yml
 ```
 
 2. Replace all `<proj-root-path>` with your project's path (see path to current dir with `pwd`)
