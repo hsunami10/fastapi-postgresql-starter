@@ -3,15 +3,22 @@ from typing import Literal, final
 
 
 @final
-class Environment(str, Enum):
+class DevEnv(str, Enum):
     LOCAL = "LOCAL"
+    DOCKER = "DOCKER"
+
+
+@final
+class Environment(str, Enum):
+    DEVELOPMENT = "DEVELOPMENT"
+    DOCKER = "DOCKER"
     TESTING = "TESTING"
     STAGING = "STAGING"
     PRODUCTION = "PRODUCTION"
 
     @property
     def is_debug(self) -> bool:
-        return self in (self.LOCAL, self.STAGING, self.TESTING)
+        return self in (self.DEVELOPMENT, self.DOCKER, self.STAGING, self.TESTING)
 
     @property
     def is_testing(self) -> bool:

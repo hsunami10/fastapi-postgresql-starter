@@ -6,7 +6,7 @@
 2. `cp .env.template .env` (do not alter contents of .env.template)
 3. `docker compose up -d --build` (first run only)
 4. `docker compose exec backend-api migrate`
-5. (for VSCode)
+5. for VSCode only
    - install python `3.12` and poetry, and run `poetry install` to auto-setup the virtualenv
    - make sure the python interpreter in VSCode is set to the poetry venv
 
@@ -15,7 +15,7 @@
 Connection Fields:
 
 - Host/Socket: `127.0.0.1` (default, leave blank)
-- Port: `5555` 
+- Port: `5432` 
 - Password: `changethis`
 - Database: `app`
 
@@ -51,6 +51,19 @@ alias dni="dn inspect"
 alias dnls="dn ls"
 EOF
 ```
+
+## Running the FastAPI Server
+
+There are 3 ways you can run the server:
+
+- in a docker container - `docker compose up` commands
+- running it manually in poetry's virtual environment
+  1. navigate to the backend project's root directory
+  2. enter poetry's virtual env with: `source "$(poetry env info -p)/bin/activate`
+  3. run the `uvicorn` command: `uvicorn --reload --port=8080 src.main:app`
+- running locally in debug mode
+  - this enables you to run and test with breakpoints using the OpenAPI docs or frontend code (**not the same** as running pytest integration tests)
+  - go to Debugging → FastAPI for more info on how to do this
 
 ## Docker
 
@@ -130,6 +143,10 @@ mkdir ~/.itermocil # Continue with steps from above
 
 ## Debugging
 
+**⚠️⚠️⚠️ IMPORTANT ⚠️⚠️⚠️**: Whenever you run tests, make sure that your docker containers are running.
+
+### Pytest Tests
+
 To run tests without breakpoints, run this command:
 
 ```sh
@@ -145,10 +162,19 @@ To run tests **with breakpoints** in VSCode, you need some extra steps:
 
 1. set a breakpoint → `import debugpy` and add `debugpy.breakpoint()` to your desired location
 2. run the above command
-3. go to VSCode's "Run and Debug" panel → select the `Python Debugger: Attach to Docker` option from the dropdown
+3. go to VSCode's "Run and Debug" panel → select the `Python Debugger: Pytest in Docker` option from the dropdown
 4. click "Play"
 
 VSCode should now stop execution at the breakpoint!
+
+### FastAPI
+
+To run the FastAPI server with breakpoints (so you can test breakpoints in OpenAPI):
+
+1. set a breakpoint (red dot) in VSCode - do **not** use `debugpy` like above
+2. go to VSCode's "Run and Debug" panel → select the `Python Debugger: FastAPI` option from the dropdown
+3. click "Play"
+4. navigate to `localhost:8888/docs` to access OpenAPI docs!
 
 ### References
 

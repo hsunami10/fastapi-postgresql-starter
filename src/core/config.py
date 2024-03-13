@@ -4,7 +4,7 @@ from typing import Any
 from pydantic import AnyHttpUrl, HttpUrl, PostgresDsn, validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from src.core.constants import Environment
+from src.core.constants import DevEnv, Environment
 
 
 class Settings(BaseSettings):
@@ -17,6 +17,7 @@ class Settings(BaseSettings):
 
     PROJECT_NAME: str
     ENVIRONMENT: Environment = Environment.PRODUCTION
+    DEV_ENV: DevEnv | None = None
 
     # TODO: change for prod
     SITE_DOMAIN: str = "https://myappdomain.com"
@@ -35,11 +36,22 @@ class Settings(BaseSettings):
     def assemble_db_connection(cls, v: str | None, values: dict[str, Any]) -> Any:
         if isinstance(v, str):
             return v
+        postgres_host = values.get("POSTGRES_HOST")
+        if (
+            values.get("ENVIRONMENT") == Environment.DEVELOPMENT
+            or values.get("ENVIRONMENT") == Environment.TESTING
+        ) and values.get("DEV_ENV") == DevEnv.LOCAL:
+            postgres_host = "localhost"
+
+        print(values.get("ENVIRONMENT"))
+        print(values.get("DEV_ENV"))
+        print(postgres_host)
         return PostgresDsn.build(
             scheme="postgresql+asyncpg",  # async driver
             username=values.get("POSTGRES_USER"),
             password=values.get("POSTGRES_PASSWORD"),
-            host=values.get("POSTGRES_HOST"),
+            # host=values.get("POSTGRES_HOST"),
+            host=postgres_host,
             port=values.get("POSTGRES_PORT"),
             path=f"{values.get('POSTGRES_DB') or ''}",
         )

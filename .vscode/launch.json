@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Python Debugger: Attach to Docker",
+      "name": "Python Debugger: Pytest in Docker",
       "type": "debugpy",
       "request": "attach",
       "connect": { "host": "localhost", "port": 5678 },
@@ -15,8 +15,12 @@
       "name": "Python Debugger: FastAPI",
       "type": "debugpy",
       "request": "launch",
+      "env": {
+        "ENVIRONMENT": "DEVELOPMENT",
+        "DEV_ENV": "LOCAL"
+      },
       "module": "uvicorn",
-      "args": ["src.main:app", "--reload"],
+      "args": ["--reload", "--port=8888", "src.main:app"],
       "jinja": true
     }
   ]

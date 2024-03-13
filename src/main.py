@@ -14,7 +14,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from src.auth.api_v1 import auth_v1_router
 from src.core.config import settings
-from src.core.constants import Environment
+from src.core.constants import DevEnv, Environment
 from src.tutorial import (
     cookie_header_router,
     dependencies_router,
@@ -27,7 +27,10 @@ from src.tutorial import (
     validations_router,
 )
 
-if os.getenv("ENVIRONMENT") == Environment.TESTING:
+if (
+    os.getenv("ENVIRONMENT") == Environment.TESTING
+    and os.getenv("DEV_ENV") == DevEnv.DOCKER
+):
     debugpy.listen(("0.0.0.0", 5555))
     print("Waiting for VSCode to attach...")
     debugpy.wait_for_client()
