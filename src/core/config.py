@@ -1,7 +1,13 @@
 import secrets
-from typing import Any
 
-from pydantic import AnyHttpUrl, HttpUrl, PostgresDsn, validator
+from pydantic import (
+    AnyHttpUrl,
+    HttpUrl,
+    PostgresDsn,
+    TypeAdapter,
+    ValidationInfo,
+    field_validator,
+)
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from src.core.constants import DevEnv, Environment
@@ -29,27 +35,27 @@ class Settings(BaseSettings):
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str
-    SQLALCHEMY_DATABASE_URI: PostgresDsn | None = None
+    SQLALCHEMY_DATABASE_URL: PostgresDsn | None = None
 
-    # TODO: change the field_validator, validator is deprecated in Pydantic v2
-    @validator("SQLALCHEMY_DATABASE_URI", pre=True)
-    def assemble_db_connection(cls, v: str | None, values: dict[str, Any]) -> Any:
+    @field_validator("SQLALCHEMY_DATABASE_URL", mode="before")
+    def build_db_connection_str(
+        cls, v: str | None, info: ValidationInfo
+    ) -> PostgresDsn | None:
         if isinstance(v, str):
-            return
-        postgres_host = values.get("POSTGRES_HOST")
+            return TypeAdapter(PostgresDsn).validate_strings(v)
+        host = info.data["POSTGRES_HOST"]
         if (
-            values.get("ENVIRONMENT") == Environment.DEVELOPMENT
-            or values.get("ENVIRONMENT") == Environment.TESTING
-        ) and values.get("DEV_ENV") == DevEnv.LOCAL:
-            postgres_host = "localhost"
+            info.data["ENVIRONMENT"] == Environment.DEVELOPMENT
+            or info.data["ENVIRONMENT"] == Environment.TESTING
+        ) and info.data["DEV_ENV"] == DevEnv.LOCAL:
+            host = "localhost"
         return PostgresDsn.build(
             scheme="postgresql+asyncpg",  # async driver
-            username=values.get("POSTGRES_USER"),
-            password=values.get("POSTGRES_PASSWORD"),
-            # host=values.get("POSTGRES_HOST"),
-            host=postgres_host,
-            port=values.get("POSTGRES_PORT"),
-            path=f"{values.get('POSTGRES_DB') or ''}",
+            username=info.data["POSTGRES_USER"],
+            password=info.data["POSTGRES_PASSWORD"],
+            host=host,
+            port=info.data["POSTGRES_PORT"],
+            path=f"{info.data['POSTGRES_DB'] or ''}",
         )
 
     # CORS Settings
@@ -57,8 +63,7 @@ class Settings(BaseSettings):
     CORS_ORIGINS_REGEX: str | None = None
     CORS_ORIGINS: list[AnyHttpUrl] = []
 
-    # TODO: change the field_validator, validator is deprecated in Pydantic v2
-    @validator("CORS_ORIGINS", pre=True)
+    @field_validator("CORS_ORIGINS", mode="before")
     def assemble_cors_origins(cls, v: str | list[str]) -> list[str] | str:
         if isinstance(v, str) and not v.startswith("["):
             return [i.strip() for i in v.split(",")]
@@ -73,7 +78,7 @@ class Settings(BaseSettings):
 
     SENTRY_DSN: HttpUrl | None = None
 
-    @validator("SENTRY_DSN", pre=True)
+    @field_validator("SENTRY_DSN", mode="before")
     def sentry_dsn_can_be_blank(cls, v: str | None) -> str | None:
         if v is None or len(v) == 0:
             return None
@@ -104,9 +109,9 @@ class Settings(BaseSettings):
     # @validator("EMAILS_ENABLED", pre=True)
     # def get_emails_enabled(cls, v: bool, values: dict[str, Any]) -> bool:
     #     return bool(
-    #         values.get("SMTP_HOST")
-    #         and values.get("SMTP_PORT")
-    #         and values.get("EMAILS_FROM_EMAIL")
+    #         info.data["SMTP_HOST")
+    #         and info.data["SMTP_PORT")
+    #         and info.data["EMAILS_FROM_EMAIL")
     #     )
 
     # EMAIL_TEST_USER: EmailStr = "test@example.com"  # type: ignore

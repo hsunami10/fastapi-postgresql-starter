@@ -40,7 +40,7 @@ cat <<EOF >> ~/.bash_profile && source ~/.bash_profile # replace ~/.bash_profile
 # Docker compose aliases
 alias dc="docker compose"
 alias dca="dc attach"
-alias dcu="dc up"
+alias dcu="dc up -d"
 alias dcd="dc down"
 alias dce="dc exec"
 alias dcps="dc ps"
@@ -145,7 +145,9 @@ mkdir ~/.itermocil # Continue with steps from above
 
 **⚠️⚠️⚠️ IMPORTANT ⚠️⚠️⚠️**: Whenever you run tests, make sure that your docker containers are running.
 
-### Pytest Tests
+### Pytest
+
+####  In Docker Container
 
 To run tests without breakpoints, run this command:
 
@@ -166,6 +168,11 @@ To run tests **with breakpoints** in VSCode, you need some extra steps:
 4. click "Play"
 
 VSCode should now stop execution at the breakpoint!
+
+#### In Poetry Virtual Env (Local)
+
+1. activate poetry's virtual environment with `source "$(poetry env info -p)/bin/activate`
+2. run pytest tests with `pytest` command!
 
 ### FastAPI
 
