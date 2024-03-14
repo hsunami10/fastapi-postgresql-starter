@@ -2,6 +2,7 @@
   // Use IntelliSense to learn about possible attributes.
   // Hover to view descriptions of existing attributes.
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  // ${workspaceFolder} and predefined variables: https://code.visualstudio.com/docs/editor/variables-reference#_predefined-variables
   "version": "0.2.0",
   "configurations": [
     {
@@ -19,6 +20,8 @@
         "ENVIRONMENT": "DEVELOPMENT",
         "DEV_ENV": "LOCAL"
       },
+      "python": "${workspaceFolder}/.venv/bin/python",
+      "cwd": "${workspaceFolder}",
       "module": "uvicorn",
       "args": ["--reload", "--port=8888", "src.main:app"],
       "jinja": true

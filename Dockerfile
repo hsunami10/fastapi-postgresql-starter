@@ -15,8 +15,7 @@ RUN apt-get -y update && \
 ENV APP_DIR="/opt/app" \
     # Poetry Configuration
     POETRY_VERSION=1.7.1 \
-    POETRY_HOME="/opt/poetry" \
-    POETRY_VIRTUALENVS_CREATE=false
+    POETRY_HOME="/opt/poetry"
 
 # https://gist.github.com/mohanpedala/1e2ff5661761d3abd0385e8223e16425
 SHELL [ "/bin/bash", "-o", "pipefail", "-c" ]
@@ -24,7 +23,8 @@ SHELL [ "/bin/bash", "-o", "pipefail", "-c" ]
 # Install Poetry
 RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=${POETRY_HOME} python3 - --version ${POETRY_VERSION} && \
     cd /usr/local/bin && \
-    ln -s /opt/poetry/bin/poetry
+    ln -s /opt/poetry/bin/poetry && \
+    poetry config virtualenvs.create false
 
 WORKDIR $APP_DIR
 

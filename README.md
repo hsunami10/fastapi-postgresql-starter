@@ -2,11 +2,14 @@
 
 ## Setup
 
-1. Run `poetry install`
-2. `cp .env.template .env` (do not alter contents of .env.template)
-3. `docker compose up -d --build` (first run only)
-4. `docker compose exec backend-api migrate`
-5. for VSCode only
+1. Install python `v3.12`
+2. Install poetry - `curl -sSL https://install.python-poetry.org | python3 -`
+3. Run `poetry config virtualenvs.in-project true` ([per this link](https://github.com/python-poetry/poetry/issues/5354#issuecomment-1179074941))
+4. Run `poetry install`
+5. `cp .env.template .env` (do not alter contents of .env.template)
+6. `docker compose up -d --build` (first run only)
+7. `docker compose exec backend-api migrate`
+8. for VSCode only
    - install python `3.12` and poetry, and run `poetry install` to auto-setup the virtualenv
    - make sure the python interpreter in VSCode is set to the poetry venv
 
@@ -91,6 +94,9 @@ docker compose attach <service_name>
 
 # Start a terminal in a service
 docker compose exec <service_name> bash
+
+# Remove all unused/dangling resources
+docker system prune
 ```
 
 Services:
@@ -227,6 +233,7 @@ docker compose exec backend-api downgrade base
 | `poetry add --group dev [package-name]`    | Add a dev package to a Virtual Environment.                  |
 | `poetry remove [package-name]`             | Remove a package from a Virtual Environment.                 |
 | `poetry remove --group dev [package-name]` | Remove a dev package from a Virtual Environment.             |
+| `poetry run [package-name]`                | Run a package in a Virtual Environment. (without being in the virtual env) |
 
 #### Sample Apps
 
