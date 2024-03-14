@@ -147,13 +147,11 @@ brew install --build-from-source Formula/itermocil.rb
 mkdir ~/.itermocil # Continue with steps from above
 ```
 
-## Debugging
+## Debugging with Pytest
 
-**⚠️⚠️⚠️ IMPORTANT ⚠️⚠️⚠️**: Whenever you run tests, make sure that your docker containers are running.
+**⚠️⚠️⚠️ IMPORTANT ⚠️⚠️⚠️**: Whenever you run tests, make sure that your docker containers are running (at least the PostgreSQL one).
 
-### Pytest
-
-####  In Docker Container
+###  In Docker Container
 
 To run tests without breakpoints, run this command:
 
@@ -175,13 +173,16 @@ To run tests **with breakpoints** in VSCode, you need some extra steps:
 
 VSCode should now stop execution at the breakpoint!
 
-#### In VSCode
+### In VSCode
 
 ([per this link](https://github.com/python-poetry/poetry/issues/5354#issuecomment-1179074941))
 
-1. to set a breakpoint → hover over the line numbers and click on the red dot 🔴
-2. navigate to "Testing" in the side panel
-3. click on "Debug Test" (**do not click on "Run" Test**)
+First, set a breakpoint → hover over the line numbers and click on the red dot 🔴
+
+#### Specific Tests
+
+1. navigate to "Testing" in the side panel
+2. click on "Debug Test" (**do not click on "Run" Test**)
 
 If the tests aren't showing up in the "Testing" panel, try:
 
@@ -189,7 +190,27 @@ If the tests aren't showing up in the "Testing" panel, try:
 - delete `.pytest_cache` folder and refresh tests
 - make sure the filter icon in the Testing panel isn't checked
 
-#### In Local Terminal
+#### Current Test File
+
+1. navigate to "Run and Debug" in the side panel
+2. click on `Pytest: Run Current Test File`
+3. make sure the test file you want to run is open & active in VSCode
+4. click "Play"
+
+#### All Tests
+
+1. navigate to "Run and Debug" in the side panel
+2. click on `Pytest: Run All Tests`
+3. click "Play"
+
+#### FastAPI Server (on port 8888)
+
+1. navigate to "Run and Debug" in the side panel
+2. select the `Debug FastAPI (Port 8888)` option from the dropdown
+3. click "Play"
+4. navigate to `localhost:8888/docs` to access the app!
+
+### In Local Terminal
 
 2 methods:
 
@@ -199,15 +220,6 @@ If the tests aren't showing up in the "Testing" panel, try:
 To set a breakpoint, use `breakpoint()`, which will halt execution and create a `pdb` shell at that breakpoint
 
 To continue to the end, type `exit` into the `pdb` shell
-
-### FastAPI
-
-To run the FastAPI server with breakpoints (so you can test breakpoints in OpenAPI):
-
-1. set a breakpoint (red dot) in VSCode - do **not** use `debugpy` like above
-2. go to VSCode's "Run and Debug" panel → select the `Debug FastAPI` option from the dropdown
-3. click "Play"
-4. navigate to `localhost:8888/docs` to access OpenAPI docs!
 
 ### References
 

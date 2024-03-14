@@ -7,7 +7,7 @@
   "configurations": [
     // https://github.com/python-poetry/poetry/issues/5354#issuecomment-1471612327
     {
-      "name": "Pytest: Run for Current File",
+      "name": "Pytest: Run Current Test File",
       "type": "debugpy",
       "request": "launch",
       "python": "${workspaceFolder}/.venv/bin/python",
