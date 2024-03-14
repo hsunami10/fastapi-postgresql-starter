@@ -47,6 +47,11 @@ app.add_middleware(
 )
 
 
+@app.get("/", include_in_schema=False, status_code=status.HTTP_200_OK)
+async def root() -> dict[str, str]:
+    return {"hello": "world"}
+
+
 @app.get("/healthcheck", include_in_schema=False, status_code=status.HTTP_200_OK)
 async def healthcheck() -> dict[str, str]:
     return {"status": "ok"}

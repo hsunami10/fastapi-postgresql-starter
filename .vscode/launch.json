@@ -5,15 +5,39 @@
   // ${workspaceFolder} and predefined variables: https://code.visualstudio.com/docs/editor/variables-reference#_predefined-variables
   "version": "0.2.0",
   "configurations": [
+    // https://github.com/python-poetry/poetry/issues/5354#issuecomment-1471612327
     {
-      "name": "Python Debugger: Pytest in Docker",
+      "name": "Pytest: Run for Current File",
+      "type": "debugpy",
+      "request": "launch",
+      "python": "${workspaceFolder}/.venv/bin/python",
+      "cwd": "${workspaceFolder}",
+      "module": "pytest",
+      "args": ["${file}", "${input:pytestArgs}"],
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "Pytest: Run All Tests",
+      "type": "debugpy",
+      "request": "launch",
+      "python": "${workspaceFolder}/.venv/bin/python",
+      "cwd": "${workspaceFolder}",
+      "module": "pytest",
+      "args": ["${input:pytestArgs}"],
+      // "args": "${command:pickArgs}",
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "Pytest: Attach to Docker",
       "type": "debugpy",
       "request": "attach",
       "connect": { "host": "localhost", "port": 5678 },
       "pathMappings": [{ "localRoot": "${workspaceFolder}", "remoteRoot": "." }]
     },
     {
-      "name": "Python Debugger: FastAPI",
+      "name": "Debug FastAPI (Port 8888)",
       "type": "debugpy",
       "request": "launch",
       "env": {
@@ -23,8 +47,17 @@
       "python": "${workspaceFolder}/.venv/bin/python",
       "cwd": "${workspaceFolder}",
       "module": "uvicorn",
-      "args": ["--reload", "--port=8888", "src.main:app"],
-      "jinja": true
-    }
-  ]
+      "args": ["--reload", "--port=8888", "src.main:app"], // "--port=${command:pickArgs}"
+      "jinja": true,
+    },
+  ],
+  "inputs": [
+    {
+      "id": "pytestArgs",
+      "default": "-rP",
+      "type": "pickString",
+      "options": ["-s", "-rP"],
+      "description": "Choose behavior for stdout"
+    },
+  ],
 }

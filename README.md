@@ -4,7 +4,7 @@
 
 1. Install python `v3.12`
 2. Install poetry - `curl -sSL https://install.python-poetry.org | python3 -`
-3. Run `poetry config virtualenvs.in-project true` ([per this link](https://github.com/python-poetry/poetry/issues/5354#issuecomment-1179074941))
+3. Run `cat poetry.toml > ~/Library/Application\ Support/pypoetry/config.toml`
 4. Run `poetry install`
 5. `cp .env.template .env` (do not alter contents of .env.template)
 6. `docker compose up -d --build` (first run only)
@@ -168,24 +168,44 @@ docker compose exec backend-api pytest # [options] <path-to-test-file>
 
 To run tests **with breakpoints** in VSCode, you need some extra steps:
 
-1. set a breakpoint → `import debugpy` and add `debugpy.breakpoint()` to your desired location
+1. to set a breakpoint → `import debugpy` and add `debugpy.breakpoint()` to your desired location
 2. run the above command
-3. go to VSCode's "Run and Debug" panel → select the `Python Debugger: Pytest in Docker` option from the dropdown
+3. go to VSCode's "Run and Debug" panel → select the `Pytest: Attach to Docker` option from the dropdown
 4. click "Play"
 
 VSCode should now stop execution at the breakpoint!
 
-#### In Poetry Virtual Env (Local)
+#### In VSCode
 
-1. activate poetry's virtual environment with `source "$(poetry env info -p)/bin/activate`
-2. run pytest tests with `pytest` command!
+([per this link](https://github.com/python-poetry/poetry/issues/5354#issuecomment-1179074941))
+
+1. to set a breakpoint → hover over the line numbers and click on the red dot 🔴
+2. navigate to "Testing" in the side panel
+3. click on "Debug Test" (**do not click on "Run" Test**)
+
+If the tests aren't showing up in the "Testing" panel, try:
+
+- refreshing tests - `Cmd + Shift + P` → Test: Refresh Tests
+- delete `.pytest_cache` folder and refresh tests
+- make sure the filter icon in the Testing panel isn't checked
+
+#### In Local Terminal
+
+2 methods:
+
+- activate poetry's virtual environment with `source "$(poetry env info -p)/bin/activate` + run `pytest` command, OR
+- run `poetry run pytest`
+
+To set a breakpoint, use `breakpoint()`, which will halt execution and create a `pdb` shell at that breakpoint
+
+To continue to the end, type `exit` into the `pdb` shell
 
 ### FastAPI
 
 To run the FastAPI server with breakpoints (so you can test breakpoints in OpenAPI):
 
 1. set a breakpoint (red dot) in VSCode - do **not** use `debugpy` like above
-2. go to VSCode's "Run and Debug" panel → select the `Python Debugger: FastAPI` option from the dropdown
+2. go to VSCode's "Run and Debug" panel → select the `Debug FastAPI` option from the dropdown
 3. click "Play"
 4. navigate to `localhost:8888/docs` to access OpenAPI docs!
 
