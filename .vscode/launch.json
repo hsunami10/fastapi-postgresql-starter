@@ -7,13 +7,24 @@
   "configurations": [
     // https://github.com/python-poetry/poetry/issues/5354#issuecomment-1471612327
     {
+      "name": "Pytest: Run Test Function",
+      "type": "debugpy",
+      "request": "launch",
+      "python": "${workspaceFolder}/.venv/bin/python",
+      "cwd": "${workspaceFolder}",
+      "module": "pytest",
+      "args": ["${file}::${input:testFunction}", "-rP"],
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
       "name": "Pytest: Run Current Test File",
       "type": "debugpy",
       "request": "launch",
       "python": "${workspaceFolder}/.venv/bin/python",
       "cwd": "${workspaceFolder}",
       "module": "pytest",
-      "args": ["${file}", "${input:pytestArgs}"],
+      "args": ["${file}", "-rP"], // "${input:pytestArgs}"],
       "console": "integratedTerminal",
       "justMyCode": false
     },
@@ -59,5 +70,10 @@
       "options": ["-s", "-rP"],
       "description": "Choose behavior for stdout"
     },
+    {
+      "id": "testFunction",
+      "type": "promptString",
+      "description": "Test function name"
+    }
   ],
 }
