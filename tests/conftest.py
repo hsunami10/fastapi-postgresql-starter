@@ -1,14 +1,12 @@
-import asyncio
 import os
 from typing import AsyncGenerator, Generator
 
 import pytest
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
-from sqlalchemy.ext.asyncio import AsyncConnection, AsyncEngine, create_async_engine
+from sqlalchemy.ext.asyncio import AsyncConnection
 
-from src.core.config import settings
-from src.core.database import engine
+from src.core.database import async_engine
 from src.main import app
 
 
@@ -30,39 +28,10 @@ def run_migrations() -> Generator[None, None, None]:
 #     loop.close()
 
 
-# NOTE: Method #1 - re-creating the engine for every test function works
-# but is there any way to re-create the engine with scope=session?
-# @pytest_asyncio.fixture(scope="function")
-# async def async_connection() -> AsyncGenerator[AsyncConnection, None]:
-#     engine = create_async_engine(str(settings.SQLALCHEMY_DATABASE_URL))
-
-#     async with engine.begin() as connection:
-#         yield connection
-#     await engine.dispose()
-
-
-# NOTE: Method #2 - reusing the engine from app works
-# but I do not dispose of it - should I?
 @pytest_asyncio.fixture(scope="function")
 async def async_connection() -> AsyncGenerator[AsyncConnection, None]:
-    async with engine.begin() as connection:
+    async with async_engine.begin() as connection:
         yield connection
-
-
-# TODO: ######################### FIX #########################
-# @pytest_asyncio.fixture(scope="session")
-# async def async_engine() -> AsyncGenerator[AsyncEngine, None]:
-#     engine = create_async_engine(str(settings.SQLALCHEMY_DATABASE_URL))
-#     yield engine
-#     await engine.dispose()
-
-
-# @pytest_asyncio.fixture(scope="function")
-# async def async_connection(
-#     async_engine: AsyncEngine,
-# ) -> AsyncGenerator[AsyncConnection, None]:
-#     async with async_engine.begin() as connection:
-#         yield connection
 
 
 @pytest_asyncio.fixture(scope="function")

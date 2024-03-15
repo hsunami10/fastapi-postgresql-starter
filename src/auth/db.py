@@ -19,7 +19,7 @@ from sqlalchemy import (
 from sqlalchemy.dialects.postgresql import UUID
 
 from src.auth.schemas import AuthUserDB
-from src.core.database import DB_NAMING_CONVENTION, async_engine
+from src.core.database import DB_NAMING_CONVENTION, Query, async_engine
 
 auth_metadata = MetaData(naming_convention=DB_NAMING_CONVENTION)
 
@@ -61,8 +61,7 @@ async def fetch_one(query: Select | Insert | Update) -> AuthUserDB | None:
 async def find_one_by_id(user_id: int) -> AuthUserDB | None:
     if user_id is None:
         return None
-    query = select(auth_user_table).where(auth_user_table.c.id == user_id)
-    return await fetch_one(query)
+    return await fetch_one(Query.select_by_id(auth_user_table, user_id))
 
 
 async def find_one_by_email(email: str) -> AuthUserDB | None:

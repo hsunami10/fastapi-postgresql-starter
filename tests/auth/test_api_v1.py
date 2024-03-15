@@ -1,12 +1,12 @@
 import pytest
 from fastapi import status
 from httpx import AsyncClient
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncConnection
 
 from src.auth.db import auth_user_table
 from src.auth.pwd_utils import check_password
 from src.core.constants import ApiVersionPrefixes
+from src.core.database import Query
 
 
 @pytest.mark.asyncio
@@ -22,21 +22,19 @@ async def test_create_user_success(
             "password": plain_pwd,
         },
     )
-    json = response.json()
 
-    result = await async_connection.execute(
-        select(auth_user_table).where(auth_user_table.c.id == 1)
-    )
+    result = await async_connection.execute(Query.select_by_id(auth_user_table, 1))
+    assert result.rowcount == 1
     first_row = result.first()
     assert first_row is not None
 
-    dict = first_row._asdict()
-    assert dict["id"] == 1
-    assert dict["email"] == email
-    assert check_password(plain_pwd, dict["password"])
+    db = first_row._asdict()
+    assert db["id"] == 1
+    assert db["email"] == email
+    assert check_password(plain_pwd, db["password"])
 
     assert response.status_code == status.HTTP_201_CREATED
-    assert json == {"id": 1}
+    assert response.json() == {"id": 1}
 
 
 # @pytest.mark.asyncio
