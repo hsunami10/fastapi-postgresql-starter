@@ -1,5 +1,3 @@
 #!/bin/sh -e
 
-# TODO: Fix alembic.autogenerate.compare Detected removed table message
-# alembic doesn't see metadata?
-alembic revision -m "$1" # --autogenerate
+alembic revision -m "$1" --autogenerate

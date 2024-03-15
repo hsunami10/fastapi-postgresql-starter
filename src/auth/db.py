@@ -7,6 +7,7 @@ from sqlalchemy import (
     Insert,
     Integer,
     LargeBinary,
+    MetaData,
     Select,
     String,
     Table,
@@ -18,11 +19,13 @@ from sqlalchemy import (
 from sqlalchemy.dialects.postgresql import UUID
 
 from src.auth.schemas import AuthUserDB
-from src.core.database import engine, metadata
+from src.core.database import DB_NAMING_CONVENTION, async_engine
+
+auth_metadata = MetaData(naming_convention=DB_NAMING_CONVENTION)
 
 auth_user_table = Table(
     "auth_user",
-    metadata,
+    auth_metadata,
     Column("id", Integer, Identity(), primary_key=True),
     Column("email", String, nullable=False),
     Column("password", LargeBinary, nullable=False),
@@ -35,7 +38,7 @@ auth_user_table = Table(
 
 refresh_token_table = Table(
     "refresh_token",
-    metadata,
+    auth_metadata,
     Column("uuid", UUID, primary_key=True),
     Column("user_id", ForeignKey("auth_user.id", ondelete="CASCADE"), nullable=False),
     Column("token", String, nullable=False),
@@ -48,7 +51,7 @@ refresh_token_table = Table(
 
 
 async def fetch_one(query: Select | Insert | Update) -> AuthUserDB | None:
-    async with engine.begin() as conn:
+    async with async_engine.begin() as conn:
         result = await conn.execute(query)
 
         first_row = result.first()
