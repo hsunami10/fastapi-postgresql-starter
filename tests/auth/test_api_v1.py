@@ -3,10 +3,10 @@ from fastapi import status
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncConnection
 
-from src.auth.db import auth_user_table
 from src.auth.pwd_utils import check_password
 from src.core.constants import ApiVersionPrefixes
-from src.core.database import Query
+from src.db.models import auth_user_table
+from src.db.query import Query
 
 
 @pytest.mark.asyncio

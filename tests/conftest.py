@@ -1,21 +1,24 @@
 import os
-from typing import AsyncGenerator, Generator
+from typing import AsyncGenerator
 
-import pytest
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncConnection
 
-from src.core.database import async_engine
+from src.db.engine import async_engine
+from src.db.models import base_metadata
 from src.main import app
 
 
-@pytest.fixture(scope="session", autouse=True)
-def run_migrations() -> Generator[None, None, None]:
-    print("running migrations..")
-    os.system("alembic upgrade head")
-    yield
-    os.system("alembic downgrade base")
+@pytest_asyncio.fixture(scope="session", autouse=True)
+async def run_migrations() -> AsyncGenerator[None, None]:
+    async with async_engine.connect() as connection:
+        await connection.run_sync(base_metadata.drop_all)
+        await connection.run_sync(base_metadata.create_all)
+        await connection.commit()
+        yield
+        await connection.run_sync(base_metadata.drop_all)
+        await connection.commit()
 
 
 # NOTE: Deprecated and doesn't work for some reason

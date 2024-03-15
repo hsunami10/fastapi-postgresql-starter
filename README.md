@@ -219,7 +219,7 @@ If the tests aren't showing up in the "Testing" panel, try:
 
 To set a breakpoint, use `breakpoint()`, which will halt execution and create a `pdb` shell at that breakpoint
 
-To continue to the end, type `exit` into the `pdb` shell
+To continue, type `continue` into the `pdb` shell
 
 ### References
 
