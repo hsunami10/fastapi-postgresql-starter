@@ -182,7 +182,7 @@ First, set a breakpoint → hover over the line numbers and click on the red dot
 #### Specific Tests
 
 1. navigate to "Testing" in the side panel
-2. click on "Debug Test" (**do not click on "Run" Test**)
+2. right click and click on "Debug Test" (**do not click on "Run" Test**)
 
 If the tests aren't showing up in the "Testing" panel, try:
 

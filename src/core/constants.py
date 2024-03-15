@@ -3,7 +3,7 @@ from typing import Literal, final
 
 
 @final
-class DevEnv(str, Enum):
+class TestEnv(str, Enum):
     LOCAL = "LOCAL"
     DOCKER = "DOCKER"
 

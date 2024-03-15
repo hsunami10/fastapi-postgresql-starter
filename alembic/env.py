@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from sqlalchemy import engine_from_config, pool
 
 from alembic import context
-from src.core.constants import DevEnv, Environment
+from src.core.constants import Environment, TestEnv
 from src.core.database import metadata
 
 load_dotenv()
@@ -43,9 +43,9 @@ port = os.getenv("POSTGRES_PORT")
 db_name = os.getenv("POSTGRES_DB")
 
 if (
-    os.getenv("ENVIRONMENT") == Environment.DEVELOPMENT
-    or os.getenv("ENVIRONMENT") == Environment.TESTING
-) and os.getenv("DEV_ENV") == DevEnv.LOCAL:
+    os.getenv("ENVIRONMENT") == Environment.TESTING
+    and os.getenv("TEST_ENV") == TestEnv.LOCAL
+):
     host = "localhost"
 
 # Sync driver

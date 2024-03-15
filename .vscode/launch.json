@@ -41,8 +41,8 @@
       "type": "debugpy",
       "request": "launch",
       "env": {
-        "ENVIRONMENT": "DEVELOPMENT",
-        "DEV_ENV": "LOCAL"
+        "ENVIRONMENT": "TESTING",
+        "TEST_ENV": "LOCAL"
       },
       "python": "${workspaceFolder}/.venv/bin/python",
       "cwd": "${workspaceFolder}",

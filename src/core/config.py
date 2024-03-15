@@ -10,7 +10,7 @@ from pydantic import (
 )
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from src.core.constants import DevEnv, Environment
+from src.core.constants import Environment, TestEnv
 
 
 class Settings(BaseSettings):
@@ -23,7 +23,7 @@ class Settings(BaseSettings):
 
     PROJECT_NAME: str
     ENVIRONMENT: Environment = Environment.PRODUCTION
-    DEV_ENV: DevEnv | None = None
+    TEST_ENV: TestEnv | None = None
 
     # TODO: change for prod
     SITE_DOMAIN: str = "https://myappdomain.com"
@@ -45,9 +45,9 @@ class Settings(BaseSettings):
             return TypeAdapter(PostgresDsn).validate_strings(v)
         host = info.data["POSTGRES_HOST"]
         if (
-            info.data["ENVIRONMENT"] == Environment.DEVELOPMENT
-            or info.data["ENVIRONMENT"] == Environment.TESTING
-        ) and info.data["DEV_ENV"] == DevEnv.LOCAL:
+            info.data["ENVIRONMENT"] == Environment.TESTING
+            and info.data["TEST_ENV"] == TestEnv.LOCAL
+        ):
             host = "localhost"
         return PostgresDsn.build(
             scheme="postgresql+asyncpg",  # async driver

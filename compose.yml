@@ -9,7 +9,7 @@ services:
       - .env
     environment:
       - ENVIRONMENT=DEVELOPMENT
-      - DEV_ENV=DOCKER
+      - TEST_ENV=DOCKER
     build:
       context: .
       dockerfile: Dockerfile
