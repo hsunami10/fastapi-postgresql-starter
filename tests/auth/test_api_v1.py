@@ -1,22 +1,39 @@
 import pytest
 from fastapi import status
 from httpx import AsyncClient
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncConnection
 
-# from src.auth.constants import ErrorCode
+from src.auth.db import auth_user_table
+from src.auth.pwd_utils import check_password
 from src.core.constants import ApiVersionPrefixes
 
 
 @pytest.mark.asyncio
-async def test_create_user_success(async_client: AsyncClient) -> None:
-    path = "/"
+async def test_create_user_success(
+    async_client: AsyncClient, async_connection: AsyncConnection
+) -> None:
+    email = "email@fake.com"
+    plain_pwd = "123Aa!"
     response = await async_client.post(
-        ApiVersionPrefixes.AUTH_API_V1_PREFIX + path,
+        f"{ApiVersionPrefixes.AUTH_API_V1_PREFIX}/",
         data={
-            "username": "email@fake.com",
-            "password": "123Aa!",
+            "username": email,
+            "password": plain_pwd,
         },
     )
     json = response.json()
+
+    result = await async_connection.execute(
+        select(auth_user_table).where(auth_user_table.c.id == 1)
+    )
+    first_row = result.first()
+    assert first_row is not None
+
+    dict = first_row._asdict()
+    assert dict["id"] == 1
+    assert dict["email"] == email
+    assert check_password(plain_pwd, dict["password"])
 
     assert response.status_code == status.HTTP_201_CREATED
     assert json == {"id": 1}

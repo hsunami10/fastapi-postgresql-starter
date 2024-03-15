@@ -1,10 +1,13 @@
+import asyncio
 import os
 from typing import AsyncGenerator, Generator
 
 import pytest
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
+from sqlalchemy.ext.asyncio import AsyncConnection, AsyncEngine, create_async_engine
 
+from src.core.config import settings
 from src.main import app
 
 
@@ -25,8 +28,33 @@ def run_migrations() -> Generator[None, None, None]:
 #     yield loop
 #     loop.close()
 
+# TODO: FIX
+# @pytest_asyncio.fixture(scope="session")
+# async def async_engine() -> AsyncGenerator[AsyncEngine, None]:
+#     engine = create_async_engine(str(settings.SQLALCHEMY_DATABASE_URL))
+#     yield engine
+#     await engine.dispose()
 
-@pytest_asyncio.fixture
+
+# @pytest_asyncio.fixture(scope="function")
+# async def async_connection(
+#     async_engine: AsyncEngine,
+# ) -> AsyncGenerator[AsyncConnection, None]:
+#     async with async_engine.begin() as connection:
+#         yield connection
+
+
+# NOTE: Works, but is there any way to re-create the engine with scope=session?
+@pytest_asyncio.fixture(scope="function")
+async def async_connection() -> AsyncGenerator[AsyncConnection, None]:
+    engine = create_async_engine(str(settings.SQLALCHEMY_DATABASE_URL))
+
+    async with engine.begin() as connection:
+        yield connection
+    await engine.dispose()
+
+
+@pytest_asyncio.fixture(scope="function")
 async def async_client() -> AsyncGenerator[AsyncClient, None]:
     host, port = os.getenv("SITE_DOMAIN"), "8080"
     transport = ASGITransport(app=app)  # type: ignore[arg-type]

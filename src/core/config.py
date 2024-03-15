@@ -55,7 +55,7 @@ class Settings(BaseSettings):
             password=info.data["POSTGRES_PASSWORD"],
             host=host,
             port=info.data["POSTGRES_PORT"],
-            path=f"{info.data['POSTGRES_DB'] or ''}",
+            path=info.data["POSTGRES_DB"],
         )
 
     # CORS Settings
