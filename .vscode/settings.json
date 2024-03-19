@@ -11,6 +11,6 @@
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true,
   "python.testing.pytestArgs": ["-rP"],
-  "python.testing.cwd": "${workspaceFolder}", // includes the .venv directory
-  "python.testing.pytestPath": "${workspaceFolder}/.venv/bin/pytest",
+  "python.testing.cwd": "${workspaceFolder}/backend", // includes the .venv directory
+  "python.testing.pytestPath": "${workspaceFolder}/backend/.venv/bin/pytest",
 }

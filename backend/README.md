@@ -106,6 +106,8 @@ Services:
 
 ## iTermocil
 
+### Setup
+
 Used to auto-open terminals in iTerm for quicker development. **Only run these commands after successfully running docker compose.**
 
 1. Install [iTermocil](https://github.com/TomAnthony/itermocil) by running these commands in terminal:
@@ -114,7 +116,7 @@ Used to auto-open terminals in iTerm for quicker development. **Only run these c
 brew install TomAnthony/brews/itermocil
 mkdir ~/.itermocil
 cd <proj-root-path> # replace this with your project directory
-cp itermocil/dev.yml ~/.itermocil/dev.yml
+cp itermocil-config.yml ~/.itermocil/dev.yml
 code ~/.itermocil/dev.yml
 ```
 
@@ -123,6 +125,12 @@ code ~/.itermocil/dev.yml
 3. Run `itermocil dev` -- which should successfully attach to running docker containers!
 
 **Note:** there won't be any output because `docker compose attach` only shows ongoing output.
+
+### Settings
+
+1. Go to iTerm2 → Preferences
+2. in Profiles, change:
+   - Basics
 
 ### Troubleshooting
 

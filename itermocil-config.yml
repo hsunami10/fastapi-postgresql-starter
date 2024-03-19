@@ -1,0 +1,27 @@
+# Replace <proj-root-path> with pwd
+# This only works if docker compose is running
+windows:
+  - name: Project Root
+    root: <proj-root-path>
+    panes:
+      - ''
+  # - name: Frontend Dev
+  #   root: <proj-root-path>
+  #   layout: even-horizontal
+  #   panes:
+  #     - docker compose attach frontend-client
+  #     - docker compose exec frontend-client npx tsc --watch
+  - name: Backend Dev
+    root: <proj-root-path>/backend
+    layout: main-vertical
+    panes:
+      - commands:
+        - echo "Entering Poetry virtual environment..." && source "$(poetry env info -p)/bin/activate"
+        name: poetry venv (Python)
+        focus: true
+      - commands:
+        - docker compose attach backend-api
+        name: FastAPI stdout (backend-api service)
+      - commands:
+        - docker compose attach pg-db
+        name: PostgreSQL stdout (pg-db service)

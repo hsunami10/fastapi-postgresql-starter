@@ -2,7 +2,7 @@
   // Use IntelliSense to learn about possible attributes.
   // Hover to view descriptions of existing attributes.
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-  // ${workspaceFolder} and predefined variables: https://code.visualstudio.com/docs/editor/variables-reference#_predefined-variables
+  // ${workspaceFolder}/backend and predefined variables: https://code.visualstudio.com/docs/editor/variables-reference#_predefined-variables
   "version": "0.2.0",
   "configurations": [
     // https://github.com/python-poetry/poetry/issues/5354#issuecomment-1471612327
@@ -10,8 +10,8 @@
       "name": "Pytest: Run Test Function",
       "type": "debugpy",
       "request": "launch",
-      "python": "${workspaceFolder}/.venv/bin/python",
-      "cwd": "${workspaceFolder}",
+      "python": "${workspaceFolder}/backend/.venv/bin/python",
+      "cwd": "${workspaceFolder}/backend",
       "module": "pytest",
       "args": ["${file}::${input:testFunction}", "-rP"],
       "console": "integratedTerminal",
@@ -21,8 +21,8 @@
       "name": "Pytest: Run Current Test File",
       "type": "debugpy",
       "request": "launch",
-      "python": "${workspaceFolder}/.venv/bin/python",
-      "cwd": "${workspaceFolder}",
+      "python": "${workspaceFolder}/backend/.venv/bin/python",
+      "cwd": "${workspaceFolder}/backend",
       "module": "pytest",
       "args": ["${file}", "-rP"], // "${input:pytestArgs}"],
       "console": "integratedTerminal",
@@ -32,8 +32,8 @@
       "name": "Pytest: Run All Tests",
       "type": "debugpy",
       "request": "launch",
-      "python": "${workspaceFolder}/.venv/bin/python",
-      "cwd": "${workspaceFolder}",
+      "python": "${workspaceFolder}/backend/.venv/bin/python",
+      "cwd": "${workspaceFolder}/backend",
       "module": "pytest",
       "args": ["${input:pytestArgs}"],
       // "args": "${command:pickArgs}",
@@ -45,7 +45,7 @@
       "type": "debugpy",
       "request": "attach",
       "connect": { "host": "localhost", "port": 5678 },
-      "pathMappings": [{ "localRoot": "${workspaceFolder}", "remoteRoot": "." }]
+      "pathMappings": [{ "localRoot": "${workspaceFolder}/backend", "remoteRoot": "." }]
     },
     {
       "name": "Debug FastAPI (Port 8888)",
@@ -55,8 +55,8 @@
         "ENVIRONMENT": "TESTING",
         "TEST_ENV": "LOCAL"
       },
-      "python": "${workspaceFolder}/.venv/bin/python",
-      "cwd": "${workspaceFolder}",
+      "python": "${workspaceFolder}/backend/.venv/bin/python",
+      "cwd": "${workspaceFolder}/backend",
       "module": "uvicorn",
       "args": ["--reload", "--port=8888", "src.main:app"], // "--port=${command:pickArgs}"
       "jinja": true,
