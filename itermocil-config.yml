@@ -5,12 +5,11 @@ windows:
     root: <proj-root-path>
     panes:
       - ''
-  # - name: Frontend Dev
-  #   root: <proj-root-path>
-  #   layout: even-horizontal
-  #   panes:
-  #     - docker compose attach frontend-client
-  #     - docker compose exec frontend-client npx tsc --watch
+  - name: Frontend Dev
+    root: <proj-root-path>/frontend
+    # layout: even-horizontal
+    panes:
+      - npm run dev
   - name: Backend Dev
     root: <proj-root-path>/backend
     layout: main-vertical

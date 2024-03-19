@@ -1,5 +1,17 @@
 {
   "files.autoSave": "onFocusChange",
+  "workbench.iconTheme": "vscode-icons",
+
+  // Frontend
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+  },
+  "eslint.workingDirectories": ["./frontend"],
+
+  // Backend
   "[python]": {
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.formatOnSave": true,
@@ -13,4 +25,16 @@
   "python.testing.pytestArgs": ["-rP"],
   "python.testing.cwd": "${workspaceFolder}/backend", // includes the .venv directory
   "python.testing.pytestPath": "${workspaceFolder}/backend/.venv/bin/pytest",
+
+  // Other
+  "[shellscript]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format",
+    "files.eol": "\n"
+  },
+  "[ignore]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "[gitignore]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
 }
