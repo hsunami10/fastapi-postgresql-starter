@@ -19,9 +19,6 @@ async def create_with_email_pwd(email: str, password: bytes) -> dict[str, Any] |
         .returning(auth_user_table)
     )
 
-    # TODO: Connection is closed error when:
-    #   - wiping + migrating database and refreshing browser
-    #   - only on the very first query
     async with async_engine.begin() as conn:
         select_result = await conn.execute(select_query)
         if select_result.first() is not None:
