@@ -3,14 +3,16 @@ from typing import AsyncGenerator
 
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
-from sqlalchemy.ext.asyncio import AsyncConnection
+from sqlalchemy.ext.asyncio import AsyncConnection, create_async_engine
 
-from src.db.engine import async_engine
+from src.core.config import settings
 from src.db.models import base_metadata
 from src.main import app
 
+async_engine = create_async_engine(str(settings.SQLALCHEMY_DATABASE_URL))
 
-@pytest_asyncio.fixture(scope="session", autouse=True)
+
+@pytest_asyncio.fixture(scope="function", autouse=True)
 async def run_migrations() -> AsyncGenerator[None, None]:
     async with async_engine.connect() as connection:
         await connection.run_sync(base_metadata.drop_all)
@@ -19,6 +21,8 @@ async def run_migrations() -> AsyncGenerator[None, None]:
         yield
         await connection.run_sync(base_metadata.drop_all)
         await connection.commit()
+
+    await async_engine.dispose()
 
 
 # NOTE: Deprecated and doesn't work for some reason
