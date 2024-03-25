@@ -9,7 +9,7 @@ from sqlalchemy import (
     select,
 )
 
-from src.auth.schemas import AuthUserDB
+from src.auth.schemas import AuthUserDB, RefreshTokenDB
 from src.core.config import settings
 from src.db.engine import async_engine
 from src.db.models import auth_user_table, refresh_token_table
@@ -23,6 +23,14 @@ async def fetch_one(query: Select | Insert | Update) -> AuthUserDB | None:
 
         first_row = result.first()
         return AuthUserDB(**first_row._asdict()) if first_row else None
+
+
+async def fetch_one_token(query: Select | Insert | Update) -> RefreshTokenDB | None:
+    async with async_engine.begin() as conn:
+        result = await conn.execute(query)
+
+        first_row = result.first()
+        return RefreshTokenDB(**first_row._asdict()) if first_row else None
 
 
 async def find_one_by_id(user_id: int) -> AuthUserDB | None:
@@ -58,3 +66,7 @@ async def insert_refresh_token(user_id: int, refresh_token: str) -> None:
         user_id=user_id,
     )
     await Query.execute(insert_query)
+
+
+async def find_refresh_token(query: Select) -> RefreshTokenDB | None:
+    return await fetch_one_token(query)

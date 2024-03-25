@@ -1,10 +1,15 @@
 import random
 import string
+from datetime import datetime, timedelta, timezone
+
+from pydantic import UUID4
 
 from src.auth import db, pwd_utils
 from src.auth.exceptions import EmailTaken, InvalidCredentials
-from src.auth.schemas import AuthUserDB, AuthUserRequestForm
+from src.auth.schemas import AuthUserDB, AuthUserRequestForm, RefreshTokenDB
 from src.core.exceptions import NotFound
+from src.db.models import refresh_token_table
+from src.db.query import Query
 
 
 async def get_user_by_id(user_id: int) -> AuthUserDB:
@@ -45,3 +50,22 @@ async def create_refresh_token(user_id: int, refresh_token: str | None = None) -
 
     await db.insert_refresh_token(user_id, refresh_token)
     return refresh_token
+
+
+async def get_refresh_token(refresh_token: str) -> RefreshTokenDB | None:
+    select_query = refresh_token_table.select().where(
+        refresh_token_table.c.token == refresh_token
+    )
+
+    return await db.find_refresh_token(select_query)
+
+
+async def expire_refresh_token(refresh_token_uuid: UUID4) -> None:
+    # datetime.fromordinal(1).replace(tzinfo=timezone.utc)
+    update_query = (
+        refresh_token_table.update()
+        .values(expires_at=datetime.now(timezone.utc) - timedelta(days=1))
+        .where(refresh_token_table.c.uuid == refresh_token_uuid)
+    )
+
+    await Query.execute(update_query)

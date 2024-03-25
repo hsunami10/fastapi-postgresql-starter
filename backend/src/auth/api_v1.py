@@ -8,8 +8,14 @@ from typing import Annotated, Any
 from fastapi import APIRouter, BackgroundTasks, Depends, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
 
-from src.auth import jwt, service, utils
-from src.auth.schemas import AccessTokenResponse, AuthUserRequestForm, AuthUserResponse
+from src.auth import deps, jwt, service, utils
+from src.auth.schemas import (
+    AccessTokenResponse,
+    AuthUserDB,
+    AuthUserRequestForm,
+    AuthUserResponse,
+    RefreshTokenDB,
+)
 from src.core.constants import ApiVersionPrefixes
 
 auth_v1_router = APIRouter(
@@ -41,19 +47,43 @@ async def create_user(
 
 @auth_v1_router.post("/login", response_model=AccessTokenResponse)
 async def login_for_access_token(
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()], response: Response
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    response: Response,
 ) -> Any:
     auth_data = AuthUserRequestForm(
         email=form_data.username, password=form_data.password
     )
 
     user = await service.authenticate_user(auth_data)
-    refresh_token = await service.create_refresh_token(user_id=user.id)
+    refresh_token_value = await service.create_refresh_token(user_id=user.id)
 
-    response.set_cookie(**utils.get_refresh_token_settings(refresh_token))
+    cookie = utils.get_refresh_token_cookie(refresh_token_value)
+    utils.set_response_cookie(response, cookie)
 
     return AccessTokenResponse(
         access_token=jwt.create_access_token(user),
-        refresh_token=refresh_token,
+        refresh_token=refresh_token_value,
+        token_type="bearer",
+    )
+
+
+@auth_v1_router.post("/token-refresh", response_model=AccessTokenResponse)
+async def refresh_tokens(
+    worker: BackgroundTasks,
+    response: Response,
+    old_refresh_token: Annotated[RefreshTokenDB, Depends(deps.valid_refresh_token)],
+    user: Annotated[AuthUserDB, Depends(deps.valid_refresh_token_user)],
+) -> Any:
+    new_refresh_token_value = await service.create_refresh_token(
+        old_refresh_token.user_id
+    )
+
+    cookie = utils.get_refresh_token_cookie(new_refresh_token_value)
+    utils.set_response_cookie(response, cookie)
+
+    worker.add_task(service.expire_refresh_token, old_refresh_token.uuid)
+    return AccessTokenResponse(
+        access_token=jwt.create_access_token(user),
+        refresh_token=new_refresh_token_value,
         token_type="bearer",
     )

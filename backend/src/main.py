@@ -1,13 +1,12 @@
 import os
 
-import debugpy
+import debugpy  # type: ignore[import-untyped]
 from fastapi import FastAPI, Request, status
 from fastapi.exception_handlers import (
     http_exception_handler,
     request_validation_exception_handler,
 )
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.middleware.cors import CORSMiddleware
@@ -55,7 +54,9 @@ async def custom_http_exception_handler(request: Request, exc: StarletteHTTPExce
 
 
 @app.exception_handler(ValidationError)
-async def validation_error_exception_handler(request: Request, exc: ValidationError):
+async def validation_error_exception_handler(
+    request: Request, exc: RequestValidationError
+):
     print(f"Logging ValidationError: {repr(exc)}")
     return await request_validation_exception_handler(request, exc)
 

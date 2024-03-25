@@ -1,7 +1,8 @@
 import re
 from datetime import datetime
+from typing import Literal
 
-from pydantic import EmailStr, Field, field_validator
+from pydantic import UUID4, EmailStr, Field, field_validator
 
 from src.core.schemas import CoreModel
 
@@ -53,6 +54,29 @@ class AuthUserDB(CoreModel):
 
 class AuthUserResponse(CoreModel):
     id: int
+
+
+class RefreshTokenDB(CoreModel):
+    """
+    Pydantic model for SQLAlchemy refresh_token table.
+    """
+
+    uuid: UUID4
+    user_id: int
+    token: str
+    expires_at: datetime
+    created_at: datetime
+    updated_at: datetime | None = None
+
+
+class CookieModel(CoreModel):
+    key: str
+    httponly: bool
+    samesite: Literal["lax", "strict", "none"] | None
+    secure: bool
+    domain: str
+    value: str = ""
+    max_age: int | None = None
 
 
 class JWTData(CoreModel):
