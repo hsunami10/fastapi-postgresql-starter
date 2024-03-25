@@ -12,7 +12,7 @@ from src.core.config import settings
 from src.core.constants import ApiVersionPrefixes
 
 oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl=f"{ApiVersionPrefixes.AUTH_API_V1_PREFIX}/tokens"
+    tokenUrl=f"{ApiVersionPrefixes.AUTH_API_V1_PREFIX}/login"
 )
 
 TokenDep = Annotated[str, Depends(oauth2_scheme)]
@@ -49,7 +49,7 @@ def parse_jwt_from_token(token: TokenDep) -> JWTData:
     return JWTData(**payload)
 
 
-async def get_current_user(
+async def _get_current_user(
     jwt_data: Annotated[JWTData, Depends(parse_jwt_from_token)],
 ) -> AuthUserDB:
     """
@@ -68,4 +68,4 @@ async def get_current_user(
     return user
 
 
-CurrentUser = Annotated[AuthUserDB, Depends(get_current_user)]
+CurrentUser = Annotated[AuthUserDB, Depends(_get_current_user)]

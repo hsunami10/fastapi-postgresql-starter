@@ -76,6 +76,13 @@ class Settings(BaseSettings):
     JWT_SECRET_KEY: str = secrets.token_urlsafe(32)  # or openssl rand -hex 32
     JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = 10
 
+    # TODO: Implement refresh tokens
+    REFRESH_TOKEN_KEY: str = "refreshToken"
+    # https://auth0.com/docs/secure/tokens/refresh-tokens
+    # https://fusionauth.io/articles/tokens/revoking-jwts
+    # https://www.loginradius.com/blog/identity/refresh-tokens-jwt-interaction/
+    REFRESH_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 21  # 21 days
+
     SENTRY_DSN: HttpUrl | None = None
 
     @field_validator("SENTRY_DSN", mode="before")
@@ -115,12 +122,6 @@ class Settings(BaseSettings):
     #     )
 
     # EMAIL_TEST_USER: EmailStr = "test@example.com"  # type: ignore
-
-    # # TODO: Implement refresh tokens
-    # REFRESH_TOKEN_KEY: str = "refreshToken"
-    # # https://fusionauth.io/articles/tokens/revoking-jwts
-    # # https://www.loginradius.com/blog/identity/refresh-tokens-jwt-interaction/
-    # REFRESH_TOKEN_EXPIRE_SECONDS: int = 60 * 60 * 24 * 21  # 21 days
 
 
 settings = Settings()

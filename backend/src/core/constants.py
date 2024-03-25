@@ -31,4 +31,5 @@ class Environment(str, Enum):
 
 @final
 class ApiVersionPrefixes:
-    AUTH_API_V1_PREFIX: Literal["/api/v1/users"] = "/api/v1/users"
+    AUTH_API_V1_PREFIX: Literal["/api/v1/auth"] = "/api/v1/auth"
+    ACCOUNTS_API_V1_PREFIX: Literal["/api/v1/accounts"] = "/api/v1/accounts"

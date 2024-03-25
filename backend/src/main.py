@@ -12,6 +12,7 @@ from pydantic import ValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.middleware.cors import CORSMiddleware
 
+from src.account.api_v1 import account_v1_router
 from src.auth.api_v1 import auth_v1_router
 from src.core.config import settings
 from src.core.constants import Environment, TestEnv
@@ -71,6 +72,7 @@ async def validation_error_exception_handler(request: Request, exc: ValidationEr
 
 
 app.include_router(auth_v1_router)
+app.include_router(account_v1_router)
 
 app.include_router(path_params_router)
 app.include_router(query_params_router)

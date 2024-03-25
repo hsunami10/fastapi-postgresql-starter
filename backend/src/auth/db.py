@@ -1,3 +1,6 @@
+import uuid
+from datetime import datetime, timedelta, timezone
+
 from sqlalchemy import (
     Insert,
     Select,
@@ -7,8 +10,9 @@ from sqlalchemy import (
 )
 
 from src.auth.schemas import AuthUserDB
+from src.core.config import settings
 from src.db.engine import async_engine
-from src.db.models import auth_user_table
+from src.db.models import auth_user_table, refresh_token_table
 from src.db.query import Query
 
 
@@ -43,3 +47,14 @@ async def create_with_email_pwd(email: str, password: bytes) -> AuthUserDB | Non
         .returning(auth_user_table)
     )
     return await fetch_one(query)
+
+
+async def insert_refresh_token(user_id: int, refresh_token: str) -> None:
+    expires_delta = timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES)
+    insert_query = refresh_token_table.insert().values(
+        uuid=uuid.uuid4(),
+        token=refresh_token,
+        expires_at=datetime.now(timezone.utc) + expires_delta,
+        user_id=user_id,
+    )
+    await Query.execute(insert_query)

@@ -1,4 +1,8 @@
-from sqlalchemy import Select, Table, select
+from typing import Any
+
+from sqlalchemy import Insert, Select, Table, Update, select
+
+from src.db.engine import async_engine
 
 
 class Query:
@@ -20,3 +24,16 @@ class Query:
             Select: An object used to construct SQLAlchemy select statements.
         """
         return select(table).where(table.c.id == id)
+
+    @staticmethod
+    async def execute(query: Insert | Update) -> None:
+        async with async_engine.begin() as conn:
+            await conn.execute(query)
+
+    @staticmethod
+    async def fetch_one(query: Select | Insert | Update) -> dict[str, Any] | None:
+        async with async_engine.begin() as conn:
+            result = await conn.execute(query)
+
+            first_row = result.first()
+            return first_row._asdict() if first_row else None

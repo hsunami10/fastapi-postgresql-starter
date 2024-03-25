@@ -5,11 +5,10 @@
 
 from typing import Annotated, Any
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, BackgroundTasks, Depends, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
 
-from src.auth import jwt, service
-from src.auth.jwt import CurrentUser
+from src.auth import jwt, service, utils
 from src.auth.schemas import AccessTokenResponse, AuthUserRequestForm, AuthUserResponse
 from src.core.constants import ApiVersionPrefixes
 
@@ -40,21 +39,21 @@ async def create_user(
     return await service.create_user(auth_data)
 
 
-@auth_v1_router.post("/tokens", response_model=AccessTokenResponse)
+@auth_v1_router.post("/login", response_model=AccessTokenResponse)
 async def login_for_access_token(
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()], response: Response
 ) -> Any:
     auth_data = AuthUserRequestForm(
         email=form_data.username, password=form_data.password
     )
 
     user = await service.authenticate_user(auth_data)
-    # TODO: add functionality to create refresh tokens
+    refresh_token = await service.create_refresh_token(user_id=user.id)
+
+    response.set_cookie(**utils.get_refresh_token_settings(refresh_token))
+
     return AccessTokenResponse(
-        access_token=jwt.create_access_token(user), token_type="bearer"
+        access_token=jwt.create_access_token(user),
+        refresh_token=refresh_token,
+        token_type="bearer",
     )
-
-
-@auth_v1_router.get("/me", response_model=AuthUserResponse)
-async def read_user_me(current_user: CurrentUser) -> Any:
-    return current_user

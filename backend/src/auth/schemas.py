@@ -61,4 +61,5 @@ class JWTData(CoreModel):
 
 class AccessTokenResponse(CoreModel):
     access_token: str
+    refresh_token: str
     token_type: str

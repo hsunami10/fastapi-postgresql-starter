@@ -1,3 +1,6 @@
+import random
+import string
+
 from src.auth import db, pwd_utils
 from src.auth.exceptions import EmailTaken, InvalidCredentials
 from src.auth.schemas import AuthUserDB, AuthUserRequestForm
@@ -32,3 +35,13 @@ async def authenticate_user(auth_data: AuthUserRequestForm) -> AuthUserDB:
         raise InvalidCredentials()
 
     return user
+
+
+async def create_refresh_token(user_id: int, refresh_token: str | None = None) -> str:
+    if not refresh_token:
+        refresh_token = "".join(
+            random.choices(population=string.ascii_letters + string.digits, k=20)
+        )
+
+    await db.insert_refresh_token(user_id, refresh_token)
+    return refresh_token
