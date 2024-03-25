@@ -10,7 +10,7 @@ from src.core.config import settings
 
 
 async def valid_refresh_token(
-    refresh_token: Annotated[str, Cookie(alias=settings.REFRESH_TOKEN_KEY)],
+    refresh_token: Annotated[str, Cookie(alias=settings.REFRESH_TOKEN_COOKIE_KEY)],
 ) -> RefreshTokenDB:
     db_refresh_token = await service.get_refresh_token(refresh_token)
     if not db_refresh_token:

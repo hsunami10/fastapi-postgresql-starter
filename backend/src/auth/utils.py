@@ -21,7 +21,7 @@ def get_refresh_token_cookie(
     is_expired: bool = False,
 ) -> CookieModel:
     base_cookie = CookieModel(
-        key=settings.REFRESH_TOKEN_KEY,
+        key=settings.REFRESH_TOKEN_COOKIE_KEY,
         httponly=True,
         samesite="none"
         if settings.SECURE_COOKIES

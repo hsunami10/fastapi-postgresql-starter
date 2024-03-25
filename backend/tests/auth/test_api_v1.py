@@ -5,8 +5,8 @@ from sqlalchemy.ext.asyncio import AsyncConnection
 
 from src.auth.pwd_utils import check_password
 from src.core.constants import ApiVersionPrefixes
+from src.db import query_helper
 from src.db.models import auth_user_table
-from src.db.query import Query
 
 
 @pytest.mark.asyncio
@@ -23,7 +23,9 @@ async def test_create_user_success(
         },
     )
 
-    result = await async_connection.execute(Query.select_by_id(auth_user_table, 1))
+    result = await async_connection.execute(
+        query_helper.select_by_id(auth_user_table, 1)
+    )
     assert result.rowcount == 1
     first_row = result.first()
     assert first_row is not None

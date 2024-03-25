@@ -31,7 +31,7 @@ auth_user_table = Table(
     "auth_user",
     base_metadata,
     Column("id", Integer, Identity(), primary_key=True),
-    Column("email", String, nullable=False),
+    Column("email", String, nullable=False, unique=True),
     Column("password", LargeBinary, nullable=False),
     Column("is_admin", Boolean, server_default="false", nullable=False),
     Column(

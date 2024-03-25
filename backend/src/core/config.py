@@ -77,7 +77,7 @@ class Settings(BaseSettings):
     JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = 10
 
     # TODO: Implement refresh tokens
-    REFRESH_TOKEN_KEY: str = "refreshToken"
+    REFRESH_TOKEN_COOKIE_KEY: str = "refreshToken"
     # https://auth0.com/docs/secure/tokens/refresh-tokens
     # https://fusionauth.io/articles/tokens/revoking-jwts
     # https://www.loginradius.com/blog/identity/refresh-tokens-jwt-interaction/

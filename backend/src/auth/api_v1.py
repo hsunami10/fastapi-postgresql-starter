@@ -74,6 +74,7 @@ async def refresh_tokens(
     old_refresh_token: Annotated[RefreshTokenDB, Depends(deps.valid_refresh_token)],
     user: Annotated[AuthUserDB, Depends(deps.valid_refresh_token_user)],
 ) -> Any:
+    # https://auth0.com/docs/secure/tokens/refresh-tokens/refresh-token-rotation
     new_refresh_token_value = await service.create_refresh_token(
         old_refresh_token.user_id
     )
